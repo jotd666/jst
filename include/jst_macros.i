@@ -1,0 +1,234 @@
+	include	"whdload.i"
+
+SNOOP_BUFFER_SIZE	EQU	$E00000-$DFE000
+
+LOGPATCH_SIZE = $20000	; 128Ko should be enough for patch logging!!
+
+KEY_LENGTH = $400
+
+
+FIB_SIZE	= 300
+FNAME_SIZE	= 108
+FULLNAME_SIZE	= $100
+
+HRTMon		EQU	1
+COP		EQU	2
+ThrillKill	EQU	3
+ActionReplay	EQU	4
+
+
+; macros for relocated variable manipulation
+
+;SAFE_CONTEXT = 1
+
+GETVAR_L:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "GETVAR_L"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	move.l	(RelVar_\1,A4),\2
+	ENDM
+GETVAR_W:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "GETVAR_W"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	move.w	(RelVar_\1,A4),\2
+	ENDM
+GETVAR_B:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "GETVAR_B"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	move.b	(RelVar_\1,A4),\2
+	ENDM
+CLRVAR_L:MACRO
+	IFNE	NARG-1
+		FAIL	arguments "CLRVAR_L"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	clr.l	(RelVar_\1,A4)
+	ENDM
+CLRVAR_W:MACRO
+	IFNE	NARG-1
+		FAIL	arguments "CLRVAR_W"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	clr.w	(RelVar_\1,A4)
+	ENDM
+CLRVAR_B:MACRO
+	IFNE	NARG-1
+		FAIL	arguments "CLRVAR_B"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	clr.b	(RelVar_\1,A4)
+	ENDM
+CMPVAR_L:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "CMPVAR_L"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	cmp.l	\1,(RelVar_\2,A4)
+	ENDM
+
+ADDVAR_L:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "ADDVAR_L"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	add.l	(RelVar_\1,A4),\2
+	ENDM
+SUBVAR_L:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "SUBVAR_L"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	sub.l	(RelVar_\1,A4),\2
+	ENDM
+
+SUBVAR_B:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "SUBVAR_B"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	sub.b	(RelVar_\1,A4),\2
+	ENDM
+
+SETVAR_L:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "SETVAR_L"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	move.l	\1,(RelVar_\2,A4)
+	ENDM
+SETVAR_W:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "SETVAR_W"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	move.w	\1,(RelVar_\2,A4)
+	ENDM
+SETVAR_B:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "SETVAR_B"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	move.b	\1,(RelVar_\2,A4)
+	ENDM
+TSTVAR_L:MACRO
+	IFNE	NARG-1
+		FAIL	arguments "TSTVAR_L"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	tst.l	(RelVar_\1,A4)
+	ENDM
+TSTVAR_W:MACRO
+	IFNE	NARG-1
+		FAIL	arguments "TSTVAR_W"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	tst.w	(RelVar_\1,A4)
+	ENDM
+TSTVAR_B:MACRO
+	IFNE	NARG-1
+		FAIL	arguments "TSTVAR_B"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	tst.b	(RelVar_\1,A4)
+	ENDM
+
+LEAVAR:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "LEAVAR"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	lea	(RelVar_\1,A4),\2
+	ENDM
+
+; lea with a data register
+
+LEAVAR_D:MACRO
+	IFNE	NARG-2
+		FAIL	arguments "LEAVAR_D"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	STORE_REGS	A4
+	LEAVAR	\1,A4	; destroy A4!
+	move.l	A4,\2
+	RESTORE_REGS	A4
+	ENDM
+
+PEAVAR:MACRO
+	IFNE	NARG-1
+		FAIL	arguments "PEAVAR"
+	ENDC
+	IFD	SAFE_CONTEXT
+	SET_VAR_CONTEXT
+	ENDC
+	pea	(RelVar_\1,A4)
+	ENDM
+
+; change VBR value and note it in current_vbr variable
+; needs the program to run in supervisor mode already
+
+CHANGEVBR:MACRO
+	MC68010
+	movec	\1,VBR
+	SETVAR_L	\1,current_vbr
+	MC68000
+	ENDM
+
+; 1: size b/w/l, 2: size, 3: value to fill
+
+BLKDECL:MACRO
+	IFNE	NARG-3
+		FAIL	arguments "BLKDECL"
+	ENDC
+	IFD	BARFLY
+	ds.\1	\2,\3
+	ELSE
+	blk.\1	\2,\3
+	ENDC
+	ENDM
+
+; put stuff in zero-page for easy trace/debug
+MEMFOOTPRINT:MACRO
+	;;move.l	\1,$110
+	ENDM
+	

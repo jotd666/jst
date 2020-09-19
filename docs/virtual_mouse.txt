@@ -1,0 +1,24 @@
+The Virtual Mouse functionality comes with the following caveats:
+
+- Precision is limited, in fact the smallest move is 4 pixels. This is due to a hardware limitation.
+- Port 1 is recommended. When in Port 2, right mouse button WILL NOT WORK at all.
+- Recommended that you use either joypad=1 (Port 1 only) or joypad=2 (Port 2 only). joypad=3 will produce unexpected behaviour.
+
+EXAMPLE:
+cd32load lemmings.slave vm=$11 vmdelay=1 vmmodbut=$12 vmmoddelay=0 joypad=2
+
+With these settings:
+- The virtual mouse is triggered on or off with the "Play" button (vm=$11). If you have any of these tooltypes set, the Virtual Mouse is on by default but can be turned off if you wish.
+- By default, the speed is set to a delay of 1 (vmdelay=1, larger numbers=slower)
+- The virtual mouse can be moved at a modified speed by holding down the Reverse button (vmmodbut=$12)
+- The modified speed is a delay of 0. So when the modify button is being held down, the cursor will move faster (vmdelay=0, larger numbers=slower)
+
+
+The full list of modifier button:
+$11 (Play)
+$12 (Reverse)
+$13 (Forward)
+$14 (Green)
+$15 (Yellow)
+$16 (Red)
+$17 (Blue)

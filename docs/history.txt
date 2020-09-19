@@ -1,0 +1,89 @@
+v6.2
+
+- fixed: 2nd button joystick buttonpress bug
+- improved: setting JOY1xx or JOY0yy option automatically enables JOYPAD proper settings
+- improved: added JOYPAD tooltype. This isn't perfect, as it enables both joypads
+
+v6.1 (01.07.2018):
+
+- fixed: resload_GetCustom now returns TRUE instead of FALSE (Bloodwych works)
+- fixed: slave name truncation issue (kickstart 1.3)
+- fixed: resload_GetFileSizeDec now returns decrunched size instead of 0 (Slamtilt works)
+- fixed: built-in quitkey was completely broken (so 68000 users couldn't use it properly)
+- fixed: CUSTOM1=>5 tooltypes are now active (forgot to implement that, sorry!), so conditional patchlists (trainers) are working now
+- fixed: resload_Decrunch RNC uses its own stack (could crash some low-stack usage games when data files were RN-packed)
+- fixed: reload_GetFileSize/GetFileSizeDec now test D0 before returning (some slaves only tested CCR), Flashback works
+- fixed: JOYPAD=3 works properly now to redirect buttons to keys for both joysticks
+- fixed: Kickstart 3.1 support is working now
+- fixed: loadkick used data directory so there was a fatal RTB load error when DATA= option was used
+- fixed: saving to disk/creating new files (savegames) was very buggy, since the start of JST I guess. Still bugs, though
+- fixed: resload_GetFileSize now returns a valid value
+- fixed: kick crc mismatch (with legacy resload_LoadKick function) fixed
+- fixed: kick 1.3 command line argument parsing was broken
+- improved: kick 1.3 master read of QUITKEY environment variable
+- improved: if a normal joystick is plugged in, it's detected as such (the second button is supported if there's one,
+  and you still have the other joypad for pause+ESC if you don't have a keyboard, default mapping for PAUSE & FWD+BWD
+  made the same for both players). Also, all R+B+G+Y+pause buttons quit the game from both joypads now.
+- improved: display game quit key / env. variable QUITKEY to override game quit key (Kick 2.0+ only)
+- improved: cache flush better interrupt disabling
+- improved: resload_SetCACR partially implemented (only flushed the caches before)
+- improved (TBC): freezing interrupts when using resload_DiskLoad. This allows to make SWIV run. How the game runs with whdload
+  or cd32load without freezing the interrupts is a mystery...
+
+v6.0 (2017 xmas edition) features:
+
+- set JOYPAD=1,2,3 to enable joypad0, joypad1 or both and the JOYxyyy options to redirect buttons to keyboard
+- added JOY1BLUE/K, ... options to emulate keyboard from a CD32 joypad
+- fixed long-time double loading/memory bug for diskfiles with whdload
+- improved hex2string so quitkey accepts 0x prefix for hex
+- fixed: old bug: no more random lockups on startup
+- whdload compatibility: added resload_Examine support so kickemu/kickfs games can work
+- whdload mode: diskfiles where loaded as disks & files: fixed
+- whdload compatibility: added support for TPWM unpacker in resload_Decrunch, removed some exotic packers
+  like Fungus (gremlin), FIRE decrunch, and others.
+- whdload compatibility: RNC decrunch detects old or new versions: Rodland whdload now works
+- whdload compatibility: cache flush added in the end of resload_Decrunch
+- whdload compatibility: added better support for resload_Relocate (backported from CD32Load)
+- whdload compatibility: added support for resload_PatchSeg (backported from CD32Load)
+- whdload compatibility: added more command support to reload_Patch/PatchSeg (backported from CD32Load)
+- whdload compatibility: added CUSTOMx switches & conditional patchlists (backported from CD32Load)
+- whdload compatibility: support for V15 & V16 functions: FORCEWHD has been removed
+- whdload compatibility: LoadKick & kickstart emulation now support BCPL relocation as well
+- changed LOADDIR parameter/tooltype to DATA (matches whdload)
+- XPK pack is not supported but at least now it's detected before running the game and there's an error message
+- removed FORCEWHD, NOOSSWAP, SNOOPCUSTOM, SAVEDIR options
+- Better error message when DATA directory is not found
+- renamed USERDATA to CUSTOM to match whdload switches
+- PRELOAD now cancels HDLOAD & LOWMEM. But preloading is set by default, unlike whdload
+
+New v5.0 (beta) Features:
+
+- works with 68000/kick1.3 (tested with WinUAE)
+- For Kickstart 1.3, command line options are:
+  SLAVE,USERDATA/K,LOADDIR/K,EXECUTE/S,NOQUIT/S,NTSC/S,PAL/S,QUITKEY/K,TRAINER/S,PRELOAD/S,QUIET/S,NOCACHE/S,NOFAST/S,
+  JOYPAD/S,HDLOAD/S,LOWMEM/S,DELAY/S,BUTTONWAIT/S,LEAVECACHES/S,NOTRAPHANDLER/S,TEST/S,VERBOSE/S,
+  NOVBRMOVE/S
+- fixed a long-time bug in whdload emulation, that allows 68000/ECS CPUs to run slaves
+- added partial WHDLoad V15 compatibility (patchlist commands). You'll need FORCEWHD option (ex: Project-X SE, Lotus 2)
+- also works with high-end CPUs, just like the previous v4 versions, with their problems (MMU stuff is not so great, locks up
+  the console the second time you run from it, and all the reasons that made me give up JST in the first place...)
+
+Example of use:
+
+jst robocop.slave data=data
+jst battlesquadron.slave
+
+Limitations (I won't do anything to fix them):
+
+- In kick1.3, LOADDIR will also set SAVEDIR (JST-only feature) to avoid confusion. It was not such a good idea to separate LOAD & SAVE directories...
+  => in case of problems, just put all data files in the .slave directory, and avoid LOADDIR
+- XPK pack is not supported: please decrunch all XPK data files/diskfiles before using
+
+Limitations (I'll try to fix them):
+
+- some WHDLoad slaves crash/lockup: report them, I'll try to do something
+- os swaps lock the machine: ex: when saving hi-scores
+- on kick 2.0+, sometimes quitting a game means you cannot run JST again from this console. You need to open another one. There must be
+  a resource freeing bug/leak somewhere: workaround: open another console (it works fine each time on kickstart 1.3!!!)
+- most WHDLoad kickstart-emulated games / kickfs won't work
+

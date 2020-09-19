@@ -1,0 +1,17 @@
+To use:
+
+It's off by default. On the command line assign vk= to one of these:
+
+$11 (Play)
+$12 (Reverse)
+$13 (Forward)
+$14 (Green)
+$15 (Yellow)
+$16 (Red)
+$17 (Blue)
+
+- Press the selected button to activate (it should print the character "a" to the screen)
+- Press LEFT on DPad to backspace
+- Press RIGHT on Dpad to enter new character
+- Press UP or DOWN to cycle through selectable characters (does immediate backspace, waits 50 frames, inserts new letter)
+- Press the selected button again to deactivate (this will also push an enter keypress)

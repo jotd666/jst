@@ -1,0 +1,1257 @@
+@database "JOTD HD Install Collection"
+
+@Index INDEXNODE
+@NODE Main "Documentation de JOTD Startup"
+
+***************************************************************************
+
+                        @{b}JOTD Startup V4.8@{ub}
+              © Copyright 1995-99 Jean-François Fabre/Ralf Huvendiek
+
+***************************************************************************
+
+
+        @{" Introduction                   " Link Introduction}
+        @{" Arguments/Tooltypes            " Link Arguments}
+        @{" JST Degrader                   " Link Degrader}
+        @{" Emulation du Joypad CD32       " Link Fakepad}
+        @{" Compatibilité avec WHDload     " Link WHDLoad}
+        @{" Compatibilité avec HRTMon      " Link HRTMon}
+        @{" OSEmu - émulation AmigaOS      " Link OSEmu}
+        @{" Snapshots                      " Link Snapshot}
+        @{" Problèmes                      " Link TroubleShooting}
+        @{" Enregistrement                 " Link Register}
+        @{" Se procurer des jeux originaux " Link Originals}
+        @{" Disclaimer                     " Link Disclaimer}
+        @{" Remerciments                   " Link Acknow}
+        @{" FAQ                            " Link FAQ}
+        @{" L'auteur                       " Link Author}
+        @{" L'équipe de développement      " Link Devteam}
+        @{" Historique                     " Link History}
+
+
+@ENDNODE
+
+@NODE Introduction "Introduction"
+
+Comme vous avez pu le constater, j'ai créé et mis sur internet beaucoup de patches
+et programmes de HD install pour des jeux non dos, mais tous étaient auto-suffisants.
+Cela signifie qu'en cas de bug dans les routines communes, je devais regénérer
+le programme et le remettre sur le réseau à nouveau.
+
+Bert Jahn avait développé WHDLoad, which résout this problème car il permet de charger
+des loaders (chargeurs) spécifiques à chaque jeu et de les faire tourner en utilisant
+son propre code pour les fonctions communes (lire un fichier, dégrader le display, etc...)
+
+Cette technique permet de ne pas laisser des bugs traîner dans tous les loaders,
+et en même temps, les loaders profitent des améliorations.
+
+C'est ce que j'ai décidé de faire à mon tour aprés maintes sollicitations et un
+violent accés de motivation. JST est né d'une adaptation de ma bibliothèque de fonction
+en 8 heures de travail.
+JST est comparable à WHDLoad, mais en plus puissant pour certains cotés (il a
+aussi ses défauts...)
+Le système Amiga OS peut être appelé dans le loader, des messages peuvent être
+affichés, un gui peut être ouvert, et il y a des tonnes d'autres fonctions.
+
+Il permet également la programmation "facile" de loaders et peut faire
+fonctionner des exécutables DOS en mode dégradé (support des caches 68060,
+du VBR, de l'affichage AGA, des sprites, etc...)
+
+A présent, JST est également capable d'iconifier certains jeux, et également
+de figer l'état d'un jeu sur disque (snapshot)  pour recommencer directement au niveau
+34, où le robot à tentacules intersidérales est vraiment impossible à buter
+sans tricher.
+
+La version limitée peut uniquement créer des snapshots (pour les bug-reports), mais l'option
+RESUME, permettant de reprendre le jeu là où on avait figé n'est disponible que pour les
+utilisateurs enregistrés, bien sûr.
+
+Le fichier clé doit être nommé jst.key et être placé dans le répertoire L:
+
+JOTD HD Startup est © 1995-1999 Jean-François FABRE
+JOTDStartup est © 1999 Jean-François FABRE
+
+@ENDNODE
+
+@NODE Originals "Récupérer des jeux originaux"
+
+Comme je dis dans la documentation, réaliser des patchs pour des softs crackés ne m'intéresse pas,
+car cela occasionne du boulot en plus, et je passe pour un gros con de pirate.
+
+Je comprends que les logiciels originaux pour l'amiga sont difficiles à trouver en ce moment,
+et c'est pourquoi j'offre mes services:
+
+- Dans le cas où vos disques originaux sont endommagés, envoyez-moi les disques défectueux
+  (en tant que preuve, et j'essayerai également de réécrire dessus) avec un peu d'argent pour
+  que je puisse vous les retourner (plus si vous voulez :) ).
+  Bien sûr, contactez-moi avant de m'envoyer vos originaux, car je peux ne pas les avoir,
+  ou/et il est possible que je ne puisse pas regénérer les disques.
+  Dans ce cas, je ferai un backup de la version installée et je vous l'enverrai soit
+  sur des disquettes soit par e-mail.
+
+- dans le cas où vos recherchez l'original d'un jeu, je connais certaines boutiques d'occasion
+  où il y a d'excellents jeux. Evidemment je ne vends pas de copies ou de cracks!!! Il s'agit
+  uniquement de jeux originaux d'occasion avec la boîte et le manuel. Contactez-moi pour toute
+  question à ce propos.
+
+@ENDNODE
+
+@NODE Register "S'enregistrer à JST"
+
+JOTDStartup is SHAREWARE!
+
+A partir de la version 0.3, j'ai décidé de demander une contribution de 10 dollars US,
+20 DM, 5 livres sterling ou 50 francs (7,6 euros) pour devenir un utilisateur enregistré.
+Cependant, j'attribuerai une version enregistrée gratuite à quiconque qui aura déjà fait
+un truc cool pour moi (envoyé des disquettes, des thunes, des voitures de sport, des
+clones de Sandra Bullock...)
+Beaucoup de monde est déjà sur la liste. Si vous pensez que je vous ai oublié, contactez-moi.
+
+Pour vous enregistrer
+
+1) remplissez la fiche d'enregistrement fournie dans le package et envoyez la moi par
+   e-mail (si vous n'avez pas d'e-mail, ne remplissez pas la fiche, je me débrouillerai
+   avec votre adresse pour générer votre clé)
+
+2) envoyez l'argent à:
+
+Jean-François Fabre
+19 Rue Emile Duploye
+34500 BEZIERS
+FRANCE
+
+Précisez votre e-mail ou envoyez une disquette vierge avec l'argent (pour les utilisateurs
+n'ayant pas accès à internet) et je vous enverrai votre clé personnelle pour JST
+(+ les derniers installs pour les autres qui m'auront envoyé une disquette, mais S.V.P.
+précisez lesquels car l'archive complète est imposante (plus de 4 megs).
+
+@{b}IMPORTANT: @{ub} La seule façon valable de s'enregistrer est d'envoyer de l'argent liquide,
+des chèques français, des eurochèques.
+J'ai reçu des chèques anglais et des mandats postaux nationaux (non français).
+Je ne peux pas les encaisser en France.
+Dommage que l'euro ne soit pas encore en circulation (ne me parlez pas des chèques en euro!!)
+
+Contactez moi si vous avez des doutes au niveau des modalités d'envoi de l'argent.
+
+Pour les français: envoyer un billet de 50 Francs ou un chèque français de 50 Francs
+a l'ordre de Jean-François Fabre.
+
+Si vous pensez que mon programme est vendu trop cher, vous pouvez toujours utiliser la
+version shareware qui est limitée.
+Elle ne possède pas de limitations par rapport aux distributions gratuites du début, bien
+au contraire, mais certaines nouvelles fonctionnalités sont réservées à la version
+enregistrée. Cependant, si je corrige un bug, celui-ci sera corrigé dans les deux
+versions bien sûr (il va de même pour les évolutions majeures indispensables pour faire
+fonctionner un jeu)
+Tous les loaders seront compatibles avec la version limitée.
+
+J'espère que vous comprenez que JST et tous les loaders représentent un travail long
+et parfois lourd pour moi (et aussi pour Ralf et Keith). C'est pour cela que j'ai rendu
+JST shareware.
+Si vous avez les moyens, enregistrez-vous SVP. Dans le cas contraire, vous pouvez utiliser
+la version limitée librement. Je ne veux pas vous prendre la tête.
+
+Bien sûr, les utilisateurs enregistrés ont une plus grande priorité pour le support par
+e-mail que les autres, même si je ne réponds pas toujours si je ne vois pas ce que ma
+réponse vous apporterait (mais je lis attentivement TOUS les messages que je reçois)
+
+
+Pour mémoire, voici la liste des fonctionnalités reservées aux utilisateurs enregistrés:
+
+- Possibilité de reprendre un jeu sauvé précédemment à n'importe quel endroit (RESUME)
+- Possibilité d'effectuer les sauvegardes des jeux dans un répertoire different 
+  de celui du jeu (SAVEDIR)
+- Possibilité de charger les données des jeux dans un répertoire different 
+  de celui du loader (LOADDIR)
+- Rechargement de l'horloge par l'horloge à pile en sortie du jeu
+- Mode silencieux (QUIET)
+- Touche de sortie configurable (QUITKEY) quand le loader le prend en compte
+  (par exemple tous les loaders WHDLoad)
+- Dans certains loaders, seule la version enregistrée permet de quitter (désolé, cela pourrait changer)
+- Une conscience totalement sereine :)
+
+Note à ceux qui n'ont pas accès à internet: si vous ne voulez pas recevoir la version
+enregistrée de JST des mois aprés que vous ayez envoyé l'argent, écrivez-moi à nouveau
+(ne renvoyez pas d'argent, certains l'ont déjà fait!) pour me le rappeler. Je suis si
+bordélique que je pourrais avoir oublié de vous enregistrer!
+Quand vous vous enregistrez, spécifiez les loaders/fixes dont vous auriez besoin. Il se
+peut que je les aie.
+
+@ENDNODE
+
+@NODE Arguments "Arguments/Tooltypes"
+
+Vous pouvez sélectionner les options:
+
+- A partir du CLI en tapant les arguments (JST ? pour l'aide en ligne)
+- A partir du WB en activant/désactivant les tooltypes.
+
+Certains ont de l'effet uniquement sur les loaders qui les utilisent. Ils seront notés
+*OPTIONNEL*.
+Certains ont de l'effet sur tous les loaders. Ils sont notés comme *GENERAL*.
+
+Voilà une description rapide des options.
+
+- OBJNAME="objet": Vous permet de spécifier un nom d'objet (lancement par l'icone WB)
+
+- NTSC (GENERAL): Par défaut, l'affichage est PAL. Cette option lance l'affichage en NTSC.
+
+- TRAINER (OPTIONNEL): Active le trainer quand il y en a un. Cela peut être les vies infinies,
+  temps infini, etc...
+
+- QUIET (GENERAL): n'affiche rien et n'ouvre pas de console. Pas de message d'erreurs,
+  et pas de message de l'auteur.
+  Assurez-vous que tout fonctionne bien avant de choisir cette option.
+
+- NOCACHES/NOCACHE (GENERAL): Fige CACR à 0. Tous les caches sont désactivés. 68060 supporté.
+
+- LEAVECACHES (GENERAL): Ne pas toucher les caches. Désactivé par NOCACHES.
+
+- NOFAST (GENERAL): Toujours allouer l'extension mémoire et les autres buffers en mémoire chip.
+  Si vous avez des sprites moisis, cela pourrait aider.
+
+- HDLOAD (GENERAL): pour économiser de la mémoire, vous pouvez ne pas tout charger en mémoire,
+  charger fichier par fichier.
+  Cela fonctionne pour les fichier-disques et pour les fichiers normaux. Cependant, selon le loader,
+  les petits fichiers sont lus en mémoire pour éviter trop de OS swap.
+  Inutile avec les jeux qui ne possèdent qu'un seul fichier-disque. Utiliser LOWMEM à la place.
+
+- RESUME (GENERAL): pour utiliser un snapshot créé aupravant. Cette option utilise l'allocation
+  mémoire absolue, ce qui fait que vous devrez peut être rebooter pour libérer de la mémoire à
+  l'endroit requis. Vous pouvez aussi spécifier NOFAST dans les tooltypes pour rendre vos
+  snapshots plus compatibles d'une config mémoire à une autre.
+
+- EXECUTE (jeux DOS): ce tooltype vous permet d'utiliser JST comme un degrader normal (style KillAGA),
+  mais avec support pour le 68060 et plus de controle sur le système. Voir @{"JST degrader"	link Degrader}
+  pour plus de tétails.
+
+- USERDATA (GENERAL): si l'utilisateur passe une chaîne à ce tooltype et désire faire tourner un programme
+  en utilisant EXECUTE (fonctionnalités degrader uniquement), alors cette chaîne contient les arguments
+  du programme. S'il s'agit d'un loader, il peut être utilisé pour passer certains paramètres au loader.
+  Utile pour les diskrippers pour passer les tracks de début et de fin. La taille maximum autorisée est
+  de 80 caractères.
+
+- LOWMEM (OPTIONNEL): ne cache strictement rien en mémoire. Lit directement du disque.
+  Utile si vous n'avez qu'un A1200/020/NoFast.
+  Certains loaders peuvent ne pas aimer cette option.
+
+- NOOSSWAP (OPTIONNEL): Désactive les chargements/sauvegardes sur HD pendant le jeu.
+  Selon les loaders, NOOSSWAP leur fera tenter d'accéder à la disquette quand vous tenterez
+  de sauver ou de charger un jeu, ou ne fera rien.
+  Si vous ne choisissez pas NOOSSWAP et si le jeu doit écrire des données, il le fera sur
+  votre disque dur. Cette opération est plutot sûre (elle est en place depuis longtemps)
+  mais vous devez éviter certains filesystems ou des caches disque qui utilisent le cache
+  en écriture (écriture retardée, possible dans Dynamicache, utilisée dans AFS)
+  Utiliser ces filesystems ou des caches est rarement dangereux, sauf si vous quittez par un
+  reset ou que le jeu se bloque.
+  Dans ce cas, votre disque dur pourra être dévalidé.
+
+- NOQUIT (uniquement dans le mode degrader (EXECUTE)): certains jeux contiennent du code
+  autodetachable et tournent en background. Si vous lancez un tel jeu avec un degrader,
+  celui-ci croiera que l'exécution est terminée et rétablira les caches, l'affichage
+  et le jeu se plantera comme une grosse merde. NOQUIT permet à JST de ne pas rétablir
+  les caches et l'affichage (il faudra rebooter).
+
+- DELAY (GENERAL): Force une légère attente aprés chaque OS swap (~ 0,4 secondes)
+  Cela peut être utile pour les disques à accès lent. Cela permet au lecteur de s'arrêter
+  et laisse un peu de temps aux traitement d'interruptions avant que le système soit à
+  nouveau désactivé (permet entre autres de faire tourner beaucoup de jeux à partir
+  d'un CD sur une console CD32).
+
+- SAVEDIR (OPTIONNEL): Permet à l'utilisateur de spécifier un répertoire où les données du
+  jeu comme les hiscores ou les parties sauvegardées seront sauvées, et rechargées ensuite.
+  Certains rare loaders ne prennent pas cette option en compte.
+  Pour les utilisateurs enregistrés uniquement.
+
+- LOADDIR (GENERAL):  Permet à l'utilisateur de spécifier un répertoire où les données du
+  jeu comme les fichiers originaux ou les fichier-disques sont stockés (par exemple un CD-ROM).
+  Pour les utilisateurs enregistrés uniquement.
+
+- QUITKEY (OPTIONNEL): en spécifiant le code RAW de la touche à utiliser pour quitter, si le
+  loader le prend en compte, cette touche permettra de quitter le jeu.
+  (exemple: QUITKEY=$5F positionne HELP comme touche de sortie)
+  Cette fonction est disponible uniquement pour les utilisateurs enregistrés.
+
+- DEADLY (GENERAL): Les installs "propres" devraient fonctionner avec DEADLY activé. En effet, celui-ci
+  détruit Execbase et redirige les interruptions vers des messages d'erreur. De cette façon, aucun
+  code appartenant à la ROM ou à l'OS n'est executé (si une interruption inattendue se produit ou
+  que une routine d'exec.library est appelée). Laisser exec en place peut s'avérer risqué et peut
+  provoquer des GURUs 81000005 dans le cas où le jeu continue à utiliser des routines système du
+  style AllocMem() (ce qui n'est pas conseillé, mais le choix est laissé au coder. Pour ma part,
+  je supprime tous les appels systèmes du jeu et je les remplace par des appels que je controle).
+  Cette option ne fonctionne pas avec les loaders utilisant l'émulation OS de Harry.
+
+- NOVBRMOVE (GENERAL,68010+ only): ne pas utiliser une table VBR pour pré-traiter les interruptions.
+  Positionne le VBR à zéro, et les interruptions du jeu sont les seules à fonctionner.
+  Ce mode permet de faire fonctionner certains jeux qui se plantent sans (dans ce cas précis, le
+  tooltype NOVBRMOVE est positionné dans l'icone de la distribution du loader)
+
+- LEAVEMMU (GENERAL): cette option permet de désactiver la gestion de la MMU par JST. A utiliser
+  quand vous avez des graphismes foireux...
+
+Certaines options sont destinées au débug et au développement uniquement:
+
+- DEBUG (GENERAL): utile pour les reports de bugs. Créé une image de la mémoire sur disque.
+- LEAVEVBR (GENERAL): uniquement utile pour le debug. Permet de ne pas toucher du tout au VBR.
+  Certains debuggers comme les anciennes versions de HRTMon, ou Action Replay, peuvent alors
+  interrompre le jeu.
+- TEST (GENERAL): Le loader ne démarrera pas. Les options sélectionnées seront affichées.
+- VERBOSE (GENERAL): Le loader démarrera, mais affichera un tas d'informations (allocation mémoire,
+  fichiers chargés, débugger trouvé, tooltypes/arguments sélectionnés, etc...)
+- DEADLY (GENERAL): Les loaders devraient fonctionner avec cette option activée (sauf certains
+  qui utilisent l'émulation OSEmu de Harry)
+- FREEZEKEY (GENERAL): Permet de spécifier une touche pour activer le débuggeur (HRTMon) si installé.
+  Mêmes règles d'utilisation que QUITKEY.
+- FREEZERMB (GENERAL): Permet au bouton droit de la souris d'activer le débuggeur (HRTMon) si installé.
+- MMU (GENERAL): Cette option permet de piéger les accés illégaux à la mémoire (lecture et ecriture).
+  Seuls les développeurs devraient l'utiliser mais les loaders bien écrits doivent fonctionner
+  avec cette option activée. Cette option est particulièrement utile pour choper les bugs
+  d'accès 24bits ou d'autres programmes bizarres réalisés par des pauvres programmeurs guru/hackers/
+  tétards/mangeurs de pizza sur A500 (attention au fromage dans le lecteur de disquette).
+
+Certaines options peuvent être configurées par variable d'environnement:
+Ce sont FREEZEKEY et SAVEDIR (ex: setenv FREEZEKEY $5C, setenv SAVEDIR RAD:)
+
+EXEMPLES du CLI pour les loaders JST:
+
+JST MagicPocketsHD NOCACHES DELAY NTSC
+
+JST HookHD NOFAST HDLOAD SAVEDIR=ram: (seuls les utilisateurs enregistrés peuvent utiliser SAVEDIR)
+
+Exemples du CLI pour les exécutables DOS normaux:
+
+JST Dune NOCACHES EXECUTE (le jeu n'aime pas les caches)
+
+JST ssboot EXECUTE USERDATA=SWOS (L'exécutable ssboot a besoin de SWOS comme argument)
+
+JST AGADemo LEAVEVBR LEAVECACHES NTSC EXECUTE (la demo utilise les caches et le VBR relogé
+en mémoire fast, mais mais mon Workbench est en multiscan, et je veux lancer la démo en
+15KHz et en NTSC)
+
+Bien sûr, si l'exécutable passe en PAL ou ouvre un écran intuition, les fonctionnalités de JST
+sont inactivées. JST n'est pas Garcimore.
+
+@ENDNODE
+
+@NODE Scripts "Scripts de départ et de fin"
+
+version enregistrée uniquement!
+
+Avec la version enregistrée, vous pouvez faire exécuter à JST des scripts au démarrage et
+à la sortie du loader. Utile pour activer/désactiver les commodités, les cartes ethernet,
+enforcer, etc...
+Ces 2 scripts ne sont pas spécifiques à un loader mais sont généraux. Ils doivent être
+situés dans le répertoire S: et être appelés:
+
+jstpre.sh pour le script pre-JST
+jstpost.sh pour le script post-JST
+
+jstpre.sh contient par exemple:
+
+enforcer off
+handlecx multicx disable
+
+Cette fonctionnalité est également active (et trés utile) avec l'option EXECUTE.
+(mode degrader). Vous n'avez pas à créer un script pour chaque jeu que vous installez.
+
+NOTE: Si T: n'existe pas, les scripts ne seront pas exécutés (S.V.P gardez T: en RAM:
+ou un disque virtuel)
+
+@ENDNODE
+
+@NODE Snapshot "Gestion des snapshots"
+
+Version enregistrée uniquement!
+
+Quand un loader prend en compte la fonction d'iconification, le menu d'iconification vous
+permet de créer une image mémoire du jeu à l'instant désiré, afin de pouvoir reprendre
+plus tard à ce point de la partie.
+
+L'image du jeu est écrite dans le répertoire indiqué par SAVEDIR si positionné, sinon
+dans le répertoire du jeu.
+
+Pour charger un snapshot sauvé au préalable, activer l'option RESUME.
+
+Si le loader ou JST change, vos snapshots ne sont plus valides. C'est une limitation technique
+que je ne puis malheureusement contourner. Faites donc attention avant d'utiliser une nouvelle
+version de JST ou un nouveau loader.
+
+Seuls quelques loaders utilisent cette fonctionnalité d'iconification pour l'instant. Chaque
+loader doit être légèrerment modifié pour cela. Mettre à jour tous les loaders peut prendre
+du temps...
+
+@ENDNODE
+
+@NODE TroubleShooting "Problèmes"
+
+
+Quelques message d'erreurs peuvent se produire avant ou aprés que le jeu ait démarré.
+
+- Object is not relocatable: le loader spécifique au jeu ne doit pas adresser les variables
+  avec un adressage relogeable. Si vous désirez lancer un programme DOS avec JST, utilisez
+  le tooltype EXECUTE.
+
+- Invalid Object: vous avez essayé des objets qui ne sont pas des loaders.
+  Si vous désirez lancer un programme DOS avec JST, utilisez le tooltype EXECUTE.
+
+- Not enough memory: essayez de libérer de la mémoire. Expérimenter avec NOFAST et HDLOAD et
+  démarrer sans startup-sequence peut aider.
+
+- Version of JOTDStartup is outdated for this object: récupérez une version de JST plus récente,
+  la version dont vous disposez est simplement trop ancienne et ne fonctionnera pas avec le loader.
+
+- Unsupported version: Certains jeux existent dans differentes versions. J'essaye d'intégrer certaines
+  d'entre elles mais si le programme ne reconnait pas la version, il se peut qu'il affiche ce message.
+  (ça peut aussi planter)
+
+- Exception: <cryptic message> : Une instruction illégale a été rencontrée pendant l'exécution du jeu.
+  Essayez NOCACHES et NOFAST, NOVBRMOVE. Sinon, faites part à l'auteur du loader du problème avec
+  précision (version du loader, version de JST).
+
+- Uninitialized level <X> interrupt: Supprimez le tooltype DEADLY :)
+
+- Wrong virtual disk ID: Erreur du loader. Contactez l'auteur.
+
+- diskfile not found, disk read error: En mode HDLOAD/LOWMEM, un fichier est manquant.
+
+- Snapshot is not compatible with this version: vous avez créé un snapshot avec un vieux loader,
+  un vieux JST ou sur un autre amiga. Vous ne pouvez pas reprendre votre jeu avec ce snapshot!
+
+- GetDiskPointer called while in LOWMEM mode: LOWMEM n'est pas disponible avec ce loader
+  (message rare, me contacter si vous avez besoin de cette option avec un loader)
+
+- Not enough memory while you've got plenty: vérifiez la priorité de vos cartes d'extension
+  car JST utilise MEMF_REVERSE, et il se peut que ce soit la cause. Utilisez l'option
+  VERBOSE pour détecter le problème (ou envoyez moi les traces de JST avec VERBOSE).
+
+
+Si le jeu se bloque ou provoque un reset, vérifiez que vous n'avez pas un programme utilisant
+la MMU activé (enforcer, VMM, ...) ou des patches de bas niveau. JST fonctionne avec les
+amigas softkickés (le mien par exemple, mais cela dépend des kickers, je pense)
+
+Certaines versions de la 68060.library pouvaient poser problème à cause du remap des adresses
+de certaines zones de la chipmem, ce qui provoquait un conflit avec le copper et le blitter.
+Ralf a, je pense, résolu ce problème et je l'en remercie!
+
+Le jeu peut se planter si il tombe sur une exception et qu'il n'y a pas assez de mémoire pour
+restaurer le système et afficher le message d'exception. Achetez plus de mémoire!
+
+Certaines vieilles versions de JST peuvent parfois exécuter un loader alors que la dernière
+version plante. Dans ce cas, signalez moi le problème urgemment.
+
+Je suis à présent capable de tester JST et mes loaders sur les configurations suivantes:
+
+A500/68000/2Megs (jeu léger comme Prince Of Persia)
+A1200/68030/18Megs (celui que je viens d'acheter)
+A1200/68060/50Megs (celui avec lequel je développe)
+A1200/68040/34Megs (celui d'un pote)
+A1200/68060+PPC (bientot)
+
+@ENDNODE
+
+@NODE FAQ "FAQ"
+
+Q: Le loader quitte avec un message du style: Version problem
+
+A: Votre version n'est pas reconnue. Signalez-moi le problème
+
+
+Q: J'ai un ordinateur AGA et le patch de SWOS ne tourne qu'en ECS. Pourquoi?
+
+A: Parce que seule la version ECS est supportée.
+
+
+Q: Quand je lance un jeu que j'ai "freezé" (en utilisant l'option snapshot/RESUME
+   (version enregistrée), le jeu ne fonctionne pas correctement, ou le son foire.
+
+A: Supprimez le tooltype RESUME, démarrer le jeu normalement, quitter, remettre l'option
+   RESUME et réessayer.
+
+
+Q: Pourquoi on ne peut pas "promoter" le jeu en multiscan ou en résolution de carte graphique
+   alors qu'on peut les lancer en PAL ou NTSC?
+
+A: Cela signifierait qu'il faudrait que je code les drivers CyberGFX et autres dans JST,
+   car la plupart des jeux fonctionnent uniquement avec l'OS désactivé, et les jeux utilisent
+   directement les registres hardware et les copperlists. Désolé, mais c'est impossible, à
+   part si vous lancez les jeux sous UAE :)
+
+
+Q: Pourriez-vous ajouter la gestion du modem/ethernet dans les jeux qui utilisent le null-modem
+   (comme Overdrive) ?
+
+A: Ce serait trop bon, mais je devrais coder un driver série ou ethernet dans JST, et ensuite
+   patcher les jeux pour qu'ils utilisent ce protocole. Il vaudrait mieux acheter une rallonge
+   pour le cable null-modem :)
+
+
+Q: Pourquoi certains de vos patches ne permettent pas de quitter avec F10, HELP, ou un autre
+   touche.
+
+A: Parce que JST peut également être utilisé comme "degrader" pour lancer des jeux anciens
+   utilisant le DOS. Et certains d'entre eux ont tellement honte d'avoir latté la mémoire
+   qu'ils ne veulent pas retourner au Workbench. Donc JST ne peut rien faire pour cela.
+   En revanche, en utilisant l'émulation OS de Harry dans certains loaders, il est possible
+   que certains jeux redeviennent quittables et lançables du Workbench. Mais il faut qu'on
+   bosse dessus...
+
+Q: Pourquoi seulement quelques loaders permettent l'iconification et le snapshot?
+
+A: Les jeux compatibles DOS tombent dans cette catégorie (pour la raison ci-dessus).
+   Certains loaders JST purs ne supportent pas. Et pour les autres, il faut que j'ajoute
+   du code danns chacun d'eux, car cette opération nécessite d'espionner le pointeur
+   de copperlist, ce que je ne peux effectuer qu'en modifiant légèrement, mais spécifiquement
+   chaque loader.
+
+
+Q: J'ai essayé d'installer votre patch de <jeu xxx> mais le programme d'installation me dit
+   quelque chose comme "Decode disk error" ou "Sync not found". Pourquoi diantre?
+
+A: Soit vous essayez d'installer une version crackée d'un jeu originalement non dostrack, ou
+   vous essayez d'installer un re-release ou coverdisk au format dos track d'un jeu originalement
+   non dostrack. Si c'est le premier cas, pas la peine de me contacter...
+
+
+Q: J'ai une version non supportée de Pinball Dreams
+
+A: Contactez-moi
+
+
+Q: JST plante comme une grosse merde quand je quitte. Ca n'arrivait pas avant (j'ai 
+   un 68040/68060/PPC)
+
+A: Activer le tooltype LEAVEMMU pour désactiver la gestion de la MMU.
+
+
+Q: JST ne fonctionne pas terrible avec ma nouvelle carte PPC.
+
+A: Alors là, ça m'étonnerait, vu que Ralf en a une.
+
+
+Q: Lemmings se bloque aprés 5 ou 6 niveaux
+
+A: Plus maintenant. Récupérez la dernière version du loader sur aminet ou sur ma page
+   Web. Il y avait 9 vérifications (checksum) qui faisaient légèrement viander si le
+   programme était modifié.
+
+
+Q: Je ne peux pas installer un seul jeu qui utilise rob2file (Jeux de Team 17 et autres)
+
+A: Essayez rob2file 2.0. Cette version est complètement system-friendly et devrait fonctionner
+   avec tous les lecteurs de disquette, même ceux des A1200 d'Amiga Technologies, ce qui
+   n'était pas le cas avec rob2file 1.x.
+   Les jeux concernés sont:
+
+- Chaos Engine AGA (Team17)
+- Xenon 2  (Kixx/Bitmap Bros)
+- AlienBreed 2 AGA (Team17)
+- ArcadePool (Team17)
+- Assassin Special Edition (Team17)
+- BodyBlows ECS (Team17)
+- BodyBlows Galactic ECS/AGA (Team17)
+- Apache (Team17)
+- Overdrive (Team17)
+- Project-X Special Edition (Team17)
+- Superfrog (Team17)
+- Apache (Team17)
+- Mortal Kombat (Akklaim)
+- Mortal Kombat2 (Akklaim)
+- Out To Lunch AGA (Mindscape)
+
+
+Q: Est-ce que JST passe la féerie de noël du bug du réveillon de l'an 2000 SFR?
+
+A: Va te rouler, j'ai pas que ça à foutre.
+
+
+Q: Que signifie FAQ ?
+
+A: Frequently Asked Questions.
+
+@ENDNODE
+
+@NODE Degrader "JST comme degrader"
+
+Vous pouvez utiliser JST avec un programme exécutable qui n'a pas éré prévu pour, et
+avec lequel vous avez des problèmes à cause de l'affichage et des caches, le VBR, etc...
+
+Le mode degrader de JST est activé par le tooltype EXECUTE.
+
+Si vous spécifiez EXECUTE, JST essayera d'exécuter l'exécutable, en ouvrant un écran PAL (ou NTSC
+si vous activez NTSC), en mettant à zéro le VBR (sauf si vous spécifiez LEAVEVBR), en désactivant
+les caches spécifiques du 68060 (sauf si vous spécifiez LEAVECACHES) et en réglant les sprites
+en mode OCS (nécessaire pour la plupart des jeux). Bien sûr, les options spécifiques aux loaders
+comme LOWMEM, HDLOAD, NOFAST, SAVEDIR et DELAY ne fonctionneront pas.
+
+Si vous désirez désactiver les caches, ajoutez l'option NOCACHES.
+
+Vous pouvez également mettre JST en outil par défaut dans l'icone de l'exécutable
+(mettre le type d'icone à Projet), exactement comme WBKillAGA.
+  
+@ENDNODE
+
+@NODE Fakepad "CD32 joypad emulation"
+
+Since V2.9, JST is able to emulate CD32 joypad with joystick and keyboard.
+A separate tool called Fakepad is also downloadable from my page.
+
+To use this emulation, you must set FAKEPAD tooltype to 1,2 or 3, and the EXECUTE
+tooltype (JST must be in degrader mode).
+
+The games using lowlevel.library are completely fooled by this trick.
+
+Keymaps:
+
+FAKEPAD=1:
+
+Blue: F1 key
+Green: F2 key
+Yellow: F3 key
+Play: F4 key
+Left ear: F5 key
+Right ear: F6 key
+
+FAKEPAD=2:
+
+Blue: F7 key
+Green: F8 key
+Yellow: F9 key
+Play: F10 key
+Left ear: HELP key
+Right ear: '*' key (num keypad)
+
+FAKEPAD=3
+
+Blue: 'E'
+Green: 'R'
+Yellow: 'T'
+Play: 'Y'
+Left ear: 'U'
+Right ear: 'I'
+
+FAKEPAD activated (value 1, 2 or 3):
+
+Directions: joystick
+Fire (red): joystick fire button
+Blue: joystick 2nd button (if any)
+
+
+Example of CD32 games using lowlevel.library (and to which this option may be applied):
+
+- D-Generation
+- Robocod
+- Super Street Fighter II Turbo
+- Gunship 2000
+- Worms
+
+
+@ENDNODE
+
+@NODE WHDLoad "Compatibilité WHDLoad"
+
+A partir du v1.3a, JST reconnaît le format de slave WHDLoad. Cela signifie que vous pouvez
+jouer à un jeu qui a été patché avec WHDLoad en utilisant JST à la place en remplaçant
+l'outil par défaut par JST dans l'icone.
+
+Bien sûr il n'y a pas 100% de compatibilité (et ce n'est pas le but recherché)
+Voilà une @{"liste" LINK "whdlist.txt/MAIN"} de jeux qui fonctionnent en utilisant l'émulateur WHDLoad de JST:
+
+
+Si vous n'arrivez pas à faire tourner un jeu, essayez NOVBRMOVE. Cela marche parfois.
+
+Il y a des problèmes quand les jeux utilisent l'OS swap pour charger/sauver des parties
+ou autres.
+J'y travaille.
+
+Certains fonctionnent à peu prés:
+
+9 Fingers (pas de possibilité de quitter)
+World Of Commodore (pas de possibilité de quitter)
+Hardwired (pas de possibilité de quitter)
+Vision Megademo IV (pas de possibilité de quitter)
+Arte (pas de possibilité de quitter)
+
+Certains ne fonctionnent pas du tout: (gros plantages parfois)
+
+@{"La liste noire" LINK "whdfail.txt/MAIN"}
+
+@ENDNODE
+
+@NODE HRTMon "Compatibilité HRTMon"
+
+Bert Jahn et Alain Malek ont rendu WHDLoad et HRTMon compatibles, par exemple
+pour la touche d'appel de débuggeur, ou certaines commandes WHDLoad appelables
+depuis HRTMon.
+
+La bonne nouvelle est que grâce à l'émulation WHDLoad dans JST, ce dernier hérite
+des fonctionnalités HRTMon de WHDLoad:
+
+- Positionner FREEZEKEY permet d'appeler HRTMon si celui-ci est installé
+- La commande wq permet également de quitter un loader JST.
+
+Cependant:
+
+- Les commandes MMU comme ProtectReadWrite, etc... toujours non supportées.
+
+Et il y a encore des gens pour dire que l'émulation WHDLoad 
+est inutile dans JST... :)
+
+Notes:
+
+- Version minimum d'HRTMon requise: v2.22
+- Le tooltype NOVBRMOVE empêche l'activation de HRTMon
+
+@ENDNODE
+
+@NODE OSEmu "OSEmu - émulation AmigaOS"
+
+OSEmu est un module d'émulation AmigaOS écrit à l'origine par Harry, mis à jour
+par Mr Larmer, Bert Jahn et moi.
+
+Les avantages d'OSEmu sont multiples:
+
+- Les loaders permettent de faire tourner un jeu sans booter sans
+  startup-sequence, faire des scripts de démarrage à la con, positionner
+  des assignations, désactiver les commodités...
+- le jeu est alors indépendant de la version de la ROM sur votre ordinateur
+- vous pouvez quitter vers le Workbench en appuyant sur la touche '*' du
+  pavé numérique (la plus à droite en haut). Vous pouvez changer cette touche
+  avec QUITKEY. Dans le jeu original, il était impossible de quitter!
+- OSEmu permet de faire tourner beaucoup de jeux CD32. Les appels au cd.device
+  sont ignorés et ne produisent pas d'erreurs ou de plantages (le jeu pense
+  que le CD est présent, mais bien sûr vous n'entendez rien!) et la
+  lowlevel.library est partiellement supportée, ce qui signifie que vous pouvez
+  faire croire aux jeux que vous possédez un joypad connecté. Les sauvegardes
+  utilisant nonvolatile.library se sont pas encore émulés.
+
+Afin d'utiliser OSEmu avec JST, le fichier OSEmu.400 doit être situé dans le
+même répertoire que l'exécutable JST.
+Certains packages d'installers utilisant OSEmu vous proposent de mettre à jour
+votre version. Dans l'état actuel des choses, il n'y a pas de vérification de
+version dans les installations, mais vous pouvez vérifier les versions d'OSEmu
+avec la commande "version".
+
+OSEmu a tout d'abord été écrit pour faire tourner les jeux A500 (pas exemple
+Another World), mais à présent il peut faire tourner les jeux CD32 et permet
+d'émuler le joypad avec les touches de fonction:
+
+F1: bleu
+F2: vert
+F3: jaune
+F4: jouer/pause
+F5: oreille gauche
+F6: oreille droite
+
+Bien sûr le bouton feu du joystick est équivalent au bouton rouge du joypad CD32,
+et si vous possédez un joystick à 2 boutons différenciés, le deuxième bouton
+correspond au bouton bleu du joypad.
+
+OSEmu est gratuit et le code source est disponible soit sur le site de WHDLoad ou
+dans le package développeur de JST.
+
+Vérifiez la version d'OSEmu et tapant "version C:OSEmu.400" (ou là où OSEmu est
+installé)
+
+@ENDNODE
+
+@NODE Disclaimer "Disclaimer"
+
+Je ne suis en aucun cas responsable pour quelque dégat causé directement ou
+indirectement par ce logiciel.
+
+La version shareware de JST et mon travail sur les HD installers peuvent
+être distribuées librement.
+Cependant, j'apprécierais que vous m'envoyiez un mail si vous décidez
+d'inclure mon travail sur un CD ou une disquette DP.
+
+Si vous aimez ou vous n'aimez pas ce logiciel, vous pouvez m'écrire.
+
+La version enregistrée de JST ne doit pas être diffusée.
+
+@ENDNODE
+
+@NODE Author "Auteur"
+
+Courrier classique (ça marche aussi):
+
+Jean-François FABRE
+19 Rue Emile Duployé
+34500 BEZIERS
+FRANCE
+
+E-mail:
+
+jffabre@free.fr
+
+
+*SVP* ne pas envoyer de gros fichiers (>500K) sur mon mail à moins
+que je vous ai donné le feu vert.
+Cela me tape sur les nerfs et sur ma facture de téléphone. Merci.
+
+WWW:
+
+Faites un tour sur ma page de patches, où tout mon travail sur les HD installers
+est rassemblé, avec d'autres installs de qualité (tous pour des logiciels
+originaux), et d'autres programmes interéssants à ce propos.
+
+http://jffabre.free.fr/amiga/patches.html
+
+
+FTP:
+
+Disponible sur tous les sites aminet (jeu/patch) et les épiceries de nuit.
+
+
+FAX:
+
+Merci, j'en aimerais bien un pour Noël.
+
+Téléphone portable:
+
+Jamais de la vie j'achèterai une de ces bouses!
+
+@ENDNODE
+
+@NODE Devteam "L'équipe de développement"
+
+Bon, ce n'est pas une équipe mais plutot l'ensemble des personnes dont le
+code est utilisé dans JST.
+
+- Moi (développeur principal)
+- Ralf Huvendiek (co-développeur, a ajouté pas mal de fonctionnalités dont la MMU
+  et supprimé pas mal de bugs)
+- Kenneth Nielsen pour le startup code
+- Joannes Geiss pour le code de décodage des exécutables amiga
+- Alain Malek pour le code de réinit des CIAs et du clavier
+
+@ENDNODE
+
+@NODE History "Historique"
+
+V2.9d
+       - Meilleure restauration des timers (Merci Luca pour la piste!)
+       - Meilleur acquittement du clavier
+
+V2.9c
+       - Méga correction de bugs dans l'émulation WHDLoad
+
+V2.9b
+       - Légères modifications du code (bsr -> jsr). C'est tout, mais bon
+         il faut bien identifier une nouvelle version avant la 3.0 en
+         préparation
+
+V2.9
+       - Tooltype FAKEPAD ajouté pour permettre l'émulation du joypad CD32
+         pour les jeux CD32 lancés avec l'option EXECUTE (mode degrader)
+
+V2.8b
+       - Meilleure émulation WHDLoad (Jurassic Park ECS/AGA fonctionne)
+
+V2.8
+       - Ajout de la fonction RelocateExecutable. Appel WHDLoad relocate ajouté.
+         Moonstone et Total Carnage ne fonctionnent toujours pas... snif.
+       - Quelques autres petits détail corrigés
+
+V2.7e
+       - Amélioration de la lecture du répertoire. Plus limité à 1 niveau.
+         Mais ça freeze toujours de temps en temps, je ne comprends pas pourquoi.
+       - Acquittement du clavier fixé lors de la sortie du jeu
+
+V2.7b
+       - Lecture des fichiers améliorée
+       - Effacement de la mémoire chip au démarrage (merci Harry pour le conseil)
+
+V2.7
+       - Blocage avec MMUCode et les processeurs 68040 résolu (attention, la MMU
+         est supposée présente, aussi n'utilisez pas le mode MMU)
+       - Amélioration du chargement des fichiers. Se bloque encore parfois (mystère...)
+       - Nouveau tooltype FREEZERMB ajouté. Permet d'entrer dans HRTMOn avec le
+         bouton droit de la souris (pratique quand le clavier ne répond pas)
+       - JST recherche le fichier "OSEmu.400" dans le répertoire du jeu avant
+         de regarder dans PROGDIR: de JST.
+
+V2.6b
+       - Aaargh, problèmes avec les loaders comprenant l'iconification/le snapshot
+         et cela depuis la V2.4 probablement à cause d'un bug de phxass. Réparé.
+         Merci à James Battle pour avoir signalé ce bug!
+
+V2.6
+       - Support pour l'extension mémoire pour les loaders utilisant OSEmu
+         (v1.4 d'OSEmu nécessaire, incluse dans cette archive)
+       - Version d'OSEmu affichée au démarrage
+
+V2.5:
+       - Support pour l'extension mémoire WHDLoad (WHDLoad v8)
+       - Bug dans l'émulation WHDLoad corrigé
+       - Bug dans les traces VERBOSE corrigé
+       - EnterDebugger() fonctionne même avant l'appel à SaveOSData() (ça plantait)
+V2.4b:
+       - GetFileLength() ne fonctionnait pas avec LOADDIR (concerne Sensible
+         Soccer CD32)
+       - Suppression des lignes vides intempestives dans l'affichage des messages
+         (problème de la V2.4)
+
+V2.4:
+       - Aaaaargh! WriteFilePart() était méchamment buggé! Corrigé
+       - Quelques autres bugs corrigés
+       - Barfly posant pas mal de problèmes (bugs d'assemblage), je conserve
+         PhxAss (ça plante plus depuis que j'ai découpé le programme!)
+       - Quelques jeux WHDLoad en plus fonctionnent (Batman The Movie, Great Giana Sisters)
+       - Améliorarion de WriteFilePart(): les fichiers sont mis à jour
+         dans le cache mémoire en cas d'écriture: utile pour OSEmu
+         (ex: Sensible Soccer CD32)
+
+V2.3b:
+       - Améliorarion de WriteFilePart(): les diskfiles sont mis à jour
+         dans le cache mémoire en cas d'écriture: utile pour OSEmu
+         (ex: Arcade Pool)
+       - L'option NOOSSWAP empêche OSEmu d'écrire sur le disque.
+       - Modifications du code en prévision de compilation avec Barfly
+         (gros problèmes de plantages avec PhxAss v4.39)
+
+V2.3:
+       - Grave bug réparé dans la version non enregistrée. Merci Stuart.
+       - Quelques petites corrections
+       - La fonction GetFileLength() n'était pas accessible
+       - Nouvelle fonction GetUserFlags() ajoutée (développeurs)
+
+V2.2:
+       - Limitation en taille pour WriteFileHD et WriteUserFileHD positionné à 4MB
+       - Bug réparé dans le mode MMU (pb avec certains loaders)
+       - Bug réparé pour WriteFilePartHD. SWOS CD32 sauvegarde correctement à present.
+       - Nouvelle fonction DisableChipmemGap() ajoutée (développeurs)
+
+V2.1b:
+       - MMUCode correct à nouveau
+       - InstallWizard v1.2 inclus
+
+V2.1:
+       - Autodocs ajoutés, en plus du fichier functions.guide (développeurs)
+       - Install-script réparé
+       - Nouvel outil Install-Wizard ajouté (développeurs)
+       - Bugs réparés
+       - Modifications du code MMU (MMUCode)
+
+V2.0:
+       - Ralf a implémenté la gestion de la MMU pour tous les processeurs qui
+         en possèdent une: 68030,68040,68060.
+       - Ralf a débuggé la fonction iconify/snapshot qui ne fonctionnait plus
+       - Ralf a effectué bon nombre d'améliorations autres. JST fonctionne carrément
+         mieux
+       - Et moi? ben, j'ai pas fait grand chose sur JST à part enregistrer les gens
+         mais j'écris des loaders à nouveau.
+
+V1.5:
+       - Fusion des deux versions (shareware et enregistrée) de JST. A présent, un
+         fichier clé personnel permet de profiter des fonctionnalités réservées aux
+         utilisateurs enregistrés. Cela facilite la mise à jour et la distribution
+         de JST.
+
+V1.4b:
+       - Modification de la détection de HRTMon. Même avec novbrmove sélectionné
+         dans HRTMonPrefs, HRTMon est détecté.
+       - FREEZEKEY et SAVEDIR configurables par variable d'environnement
+         (utilisateurs enregistrés uniquement)
+
+V1.4:
+       - Ralf:
+           a modifié un max le code source
+           a ajouté une touche freezer (tooltype FREEZERKEY) et une fonction EnterDebugger (pour HRTMon)
+           a ajouté le support MMU complet pour 68030 (68060/68040 à venir)
+           a ajouté la fonction ReadFileFromImage (pour lire un fichier d'une image disque OFS)
+           a amélioré SaveOSData en gérant le pointeur de pile utilisateur (USP)
+           a amélioré le test de la mémoire chip
+           a réparé le décruncheur PowerPacker
+       - Jeff:
+           a réparé le décruncheur ATN! que Ralf avait modifié :)
+           a débuggé la reconnaissance de HRTMon par JST (compatible avec HRTMon v2.22+)
+           (voir @{"compatiblité HRTMon" link HRTMon} pour plus de détails)
+           a amélioré LoadFiles pour charger les fichiers dans des sous-répertoires
+           a implémenté partiellement la routine de decrunch WHDLoad. Le slave d'Aladdin marche
+           a réparé le tooltype OBJNAME
+           a ajouté la doc en français (ça m'a bien gonflé vers la fin!)
+
+V1.3a:
+       - Bugfix pour certains loaders WHDLoad
+
+V1.3: (mise à jour majeure)
+       - bug qui empêchait bon nombre de loaders de tourner (code de retour de ReadFile)
+       - emulation OS de Harry ajoutée (fonction UseHarryOSEmu)
+       - loaders WHDLoad acceptés (!!!!)
+         (fonctionnalité beta, consulter la @{"liste" link WHDLoad} des jeux qui fonctionnent)
+       - Tooltype QUITKEY ajouté
+       - Tooltype NOVBRMOVE ajouté
+       - Plusieurs fonctions développeurs ajoutées (CRC16, ReadFilePart...)
+       - LOWMEM possible avec les jeux AGA
+
+V1.2a:
+       - bug empêchant l'utilisation du tooltype DEADLY corrigé
+
+V1.2 (beta2):
+       - Meilleure fonction LoadFiles(). Beaucoup plus rapide!
+       - LOADDIR réparé (encore!!)
+       - Ralf à modifié le source et j'ai fusionné nos versions.
+       - Meilleure gestion des exceptions, fonctionnalité auto quit (developpeurs).
+
+V1.1f:
+       - DEADLY réparé. Merci à Jacob Jensen pour l'avoir signalé.
+
+V1.1e:
+       - Bugs corrigés lors de l'utilisation combinée de LOWMEM/HDLOAD et LOADDIR.
+       - Bugs corrigés dans la gestion des erreurs sur les fichiers/fichiers-disque
+       (plus de freezes, message d'erreur & retour au workbench à la place)
+       - Ralf a corrigé certains bugs potentiels et amélioré la routine d'OS swap (moins de freezes)
+       - Ralf a relogé le VBR, touche autoquit pour bientot (pour les programmeurs)
+
+V1.1d:
+       - LOADDIR réparé (LOADDIR concerne les utilisateurs enregistrés uniquement)
+       - Problème potentiel de relocation du code résolu (Merci Ralf)
+       - Message "Wrong virtual disk id" réactivé (Merci Ralf)
+
+V1.1cR2:
+       - rob2file complètement réécrit en utilisant l'OS à 100%. Beaucoup de gens avaient des
+         problèmes avec certains jeux de Team17 ou Probe (** Wrong key or no disk in drive...)
+       - Package réarrangé. Install script pour JST et les outils disque.
+       - Note: l'exécutable de JST n'a pas bougé (ce qui explique la release 2)
+
+V1.1c:
+       - Les translations MMU sont désactivées sur 68040 et 68060 pour permettre à JST de
+         fonctionner avec des nouvelles versions de la 68060.library. Si vous avez des problèmes
+         essayez avec LEAVEMMU activé. Pas de support MMU pour 68030, désolé.
+       - HexToString ajouté (développeurs)
+
+V1.1b:
+       - Les appuis claviers pendant l'OS swap ne plantent plus JST (ne pas trop chercher, quand même :))
+       - Fonctions pour programmeurs ajoutées:
+         1) possibilité de mémoriser les patches appliqués avec écriture dans un fichier
+         (plus analyse avec mise en correspondance du code source (printlog))
+         2) Recherche et remplacement automatique des commandes blitter du type move.w #addr,($58,Ax)
+         (ajout de BlitWaits automatiques)
+
+V1.1a:
+       - Snapshot amélioré (quelques lignes de code à ajouter pour certains loaders)
+       - Commande "reload" ajoutée au menu d'iconification (version enregistrée)
+
+V1.1:
+       - tooltype RESUME (version enregistrée) permet de sauvegarder l'état du jeu sur disque!
+         (pour les loaders qui le prennent en compte uniquement)
+       - Menu en mode iconifié pour permettre de sauver une photo mémoire, quitter, reprendre.
+       - Acquittement correct du clavier pour l'iconification (plus de caractères parasites)
+       - Quelques petites améliorations de l'OS swap
+       - Routine BeamDelay modifiée. Contactez-moi en cas de problèmes de temporisation, musique
+         qui foire...
+
+V1.0:
+       - fonctionnalité d'iconification ajoutée (les loaders doivent le prendre en compte, à cause
+         du registre de copper qui est write-only!!)
+       - Documentation développeur mise à jour à propos de l'iconification.
+
+V0.9c:
+       - Oups! Traitement des arguments à partir du CLI était buggé (encore!!)
+       - Option LOADDIR ajoutée (utilisateurs enregistrés uniquement)
+       - Quelques fonctions programmeur ajoutées
+       - Quelques loaders ont dû être réécrits. (récupérez les updates de Space Hulk et
+         Street Racer)
+
+V0.9b:
+       - Tooltype NOQUIT ajouté (à utiliser avec EXECUTE)
+       - Bug supprimé: En cas de terminaison avec erreur, JST n'exécutait pas le script
+         de fin (version enregistrée uniquement)
+       - Tooltype LOADDIR ajouté, mais fonction non encore implementée (version enregistrée)
+
+V0.9a:
+       - Oups! bug réparé: si T: n'existait pas, les scripts étaient quand même exécutés
+         et votre disque pouvait être invalidé à cause de la création du répertoire T
+         (seuls les utilisateurs enregistrés qui ont utilisé V0.9 étaient "exposés")
+       - Fonction TestDirectory ajoutée (développeurs)
+
+V0.9:
+       - 2 scripts jstpre.sh et jstpost.sh (version enregistrée uniquement)
+         Trés utile pour désactiver les commodités/cartes ethernet/enforcer 
+         avant que JST n'exécute le programme ou le loader et pour les réactiver
+         en sortie de JST.
+       - for développeurs: problème quand l'argument nbdisks (HD_PARAMS) était
+         accidentellement valué à 0.
+
+V0.8f1:
+       - Aaaaaaargh Encore un problème de traitement des arguments (pas avec la
+         version enregistrée). Cela empêchait l'utilisation de la plupart des
+         options du shell ou du workbench.
+
+V0.8f:
+       - Arghh, certains jeux comme Lure Of The Tempress n'aiment pas certaines
+         modifications graphiques pendant les swaps OS. Réparé.
+
+V0.8e:
+       - Rhaaaa, HDLOAD ne fonctionnait plus. Réparé.
+       - Interruption clavier par défaut améliorée
+       - Routines d'OS swap améliorées
+       - Détection du MOVEP plus précise sur le 68060
+
+V0.8d:
+       - Bug/limitation qui empêchait certains loaders de fonctionner supprimée: 
+         Fonction SetFilesPath ajoutée
+
+V0.8c:
+       - Argh. NTSC était désactivé. Corrigé.
+       - Grâce à Keith, certains problèmes d'affichage sur Pyramax, Puzznic,
+         et d'autres sont résolus. Le mode degrader est également plus efficace.
+       
+V0.8b:
+       - Tooltype USERDATA ajouté pour les loaders qui en ont besoin
+         (utile pour les rippers) et également pour passer des arguments à une commande
+         si vous utilisez EXECUTE pour dégrader un exécutable
+       - Fonction GetUserData ajoutée pour lire la chaîne passée dans USERDATA.
+       - Fonction StrncpyAsm ajoutée (D2 permet de spécifier la taille max de la chaîne)
+       - A présent, le masque du blitter est mis à zéro dans SaveOSData, qui permet de
+         mieux simuler le cold boot.
+
+V0.8a:
+       - Bug réparé avec HDLOAD et un sous-répertoire comme répertoire de données.
+
+V0.8:
+       - Tooltype LEAVECACHES ajouté: aucun cache ne sera désactivé, même les caches
+         spécifiques au 68060.
+       - Tooltype EXECUTE ajouté pour permettre d'exécuter des programmes DOS normaux,
+         (comme KillAGA) avec support du 68060. D'autres tooltypes peuvent être utilisés
+         conjointement avec celui-ci (LEAVEVBR, LEAVECACHES, NOCACHES, NTSC).
+         JST peut être à présent utilisé comme un dégrader.
+       - Les sprites sont réglés en basse résolution au démarrage (merci à Bert Jahn
+         pour la routine.
+
+V0.7:
+       - Emulation d'execbase simple ajoutée (développeurs)
+       - fonctions ajoutées pour utiliser cette émulation (développeurs)
+
+V0.6b (internal release):
+       - Bug supprimé: En mode HDLOAD, JST ne pouvait pas charger un fichier dans
+         un répertoire autre que le répertoire courant. C'est à présent réparé
+         (uniquement Kick 2.0+, désolé)
+       - Méchant bug trouvé: s'il n'y avait pas assez de mémoire, le jeu se plantait
+         lamentablement à cause d'un mauvais positionnement de pile. Quelques personnes
+         ont pu remarquer ce problème.
+       - Bug supprimé dans l'acquittement des interruptions.
+       - Attente au démarrage supprimée si DELAY est activé.
+       - Support pour le décompacteur FIRE ajouté
+       - Changement de comportement pour PatchExceptions. Il peut à nouveau être
+         utilisé pour récupérer les exceptions (développeurs)
+
+V0.6a:
+       - Emplacement par défaut de la pile modifié.
+
+V0.6:
+       - Tooltype BENICE supprimé.
+       - LOWMEM n'est plus activé par un click gauche souris au démarrage.
+       - Tooltype DEADLY ajouté.
+       - Comportement modifié en cas d'exceptions/interruptions inattendues.
+         A présent, JST essaye d'acquitter l'interruption, sauf si DEADLY est
+         activé, auquel cas il reporte l'erreur et quitte.
+         (Merci à Carlo Pirri pour ses descriptions de bugs précises)
+       - Bugfix dans la création de 'registers.dat'. A présent, l'extension mémoire
+         est correctement reportée.
+
+V0.5c:
+       - Bugfix dans ReadFileHD pour la commande de requête de taille (5)
+       - fonction ReadUserDir() ajoutée
+       - A présent, l'horloge sauvegardée par pile est rechargée uniquement lorsque l'on quitte.
+
+V0.5b:
+       - bugfix dans SaveOSData: ExecBase n'était pas effacée si le VBR valait 0 ou LEAVEVBR activé
+       - bugfix dans le traitement des arguments (CLI) de la version limitée. Quasiment aucun
+         ne fonctionnait!
+       - pile superviseur relogée en zone haute de la chipmem (dans SaveOSData): Agony, BodyBlows et
+         BodyBlows Galactic fonctionnent sur un A1200/020/NoFast standard, mais certains loaders
+         ont du être modifiés pour fonctionner avec cette version (Prince, Lotus...)
+       - Registres D0-A6 positionnés à $0 dans SaveOSData
+       - DMA sprite désactivée au boot pour éviter que l'affichage soit perturbé
+
+V0.5a:
+       - bugfix sur DMA set/clr dans la routine de swap OS
+       - WaitBOF ajouté (ne fonctionne pas)
+       - WaitBlit() amélioré
+
+V0.5:
+       - Bugfix: L'écran intuition n'était pas ouvert!
+       - Messages d'erreurs plus précis pour les exceptions (utile pour le debug)
+       - Ajout de routine decompactage TPWM (experimental, non testé)
+       - ImploderDecrunch() modifié. A présent, seuls les registres D2-D5/A2-A4 sont sauvés.
+
+V0.4b:
+       - L'affichage et les sprites sont mieux réinitialisés lors d'un swap OS
+        (HDLOAD/LOWMEM)
+
+V0.4a:
+       - Ecran intuition de démarrage passe de 16 couleurs à 4
+       - JST n'autorise plus les appels système aprés SaveOSData (pour programmeurs)
+       - Tooltype BENICE ajouté
+       - Bug dans le traitement des arguments CLI supprimé
+
+V0.4:
+       - JST recharge à présent l'horloge à partir de l'horloge hardware si disponible
+         (utilisateurs enregistrés uniquement)
+
+V0.3 : JST est à présent SHAREWARE. Certaines fonctionnalités ne sont accessibles qu'aux
+       utilisateurs enregistrés
+
+       - Compatibilité 1.3 à nouveau OK, mais SAVEDIR ne fonctionne pas en 1.3
+       - Tooltype VERBOSE ajouté (pour debug)
+       - Méthode RNC\02 ajoutée à RNCDecrunch()
+       - Fonction Alloc24BitMem() ajoutée (pour les jeux qui n'aiment pas la fast 32 bits)
+       - Fonctions Read/Write/DeleteUserFileHD() ajoutées pour utiliser le paramètre de SAVEDIR
+       (aux développeurs de mettre à jour leurs loaders)
+       - Gestion de la DMA lors des swaps OS légèrement modifiée.
+       - Bug fixé dans le dump des registres (option DEBUG)
+       - A présent, l'affichage revient avant que les dumps ne soient écrits sur disque (DEBUG).
+       - Tooltype SAVEDIR ajouté (utilisateurs enregistrés uniquement)
+
+V0.2e: 
+       - pas diffusée
+
+V0.2d:
+       - NOOSSWAP n'interdit plus HDLOAD ou LOWMEM. C'est à présent un flag utilisateur
+
+V0.2c:
+       - Bug fixé dans LoadDisksFromName (Cadaver)
+       - Le nom de la tâche devient "JOTDStartup"
+
+V0.2b:
+       - Ecran intuition de démarrage passe de 8 couleurs à 16
+
+V0.2a:
+       - bug fixé avec LoaddisquesIndex et LOWMEM (intro Superfrog)
+
+V0.2: 
+       - première diffusion sur aminet, peu de choses ont changé
+
+V0.1:
+       - release developpeur
+
+@ENDNODE
+
+@NODE Acknow "Remerciments"
+
+J'aimerais remercier les personnes suivantes:
+
+- Keith Krellwitz (Abaddon) pour les discussions à propos des loaders et pour avoir
+  codé prés du tiers des loaders utilisant JST !
+
+- Alain Malek (Hornet) pour HRTMon et pour son source!
+
+- Ralf Huvendiek pour ses loaders JST et sa coopération dans l'écriture de JST.
+
+- Johannes R. Geiss pour le code de décodage des hunks (un peu buggé, ceci dit :))
+
+- Dave Jones pour son fichier Amigaguide sur les hunks
+
+- Tous les utilisateurs enregistrés, et en particulier Robert Plutchak, Chris Vella, Steven Velletri,
+  Wolfgang Unger.
+
+- Harry, John Girvin, Codetapper, Bert Jahn, Mr Larmer et les programmeurs utilisant WHDLoad pour leurs loaders
+  et quelques conversations techniques des plus intéressantes.
+
+- Les personnes qui signalent les bugs de façon PRECISE :)
+
+- Inscrivez votre nom ici : ____________
+
+@ENDNODE

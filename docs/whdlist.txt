@@ -1,0 +1,187 @@
+A sample list of WHDLoad slave based games running with JST
+
+Academy
+Airball
+Aladdin
+Another World
+APB (both versions)
+Apidya
+Aquaventura
+Aquablast
+Arkanoid 2
+Arcade Fruit Machine
+Arnie
+Bad Company (screen size problems)
+Battletoads CD32
+Batman
+Batman The Movie
+Battleships
+BAT 2
+Beast
+Beast 2
+Beast 3
+Beyond The Ice Palace
+Bloodmoney
+Bombuzal
+Brattacas
+BrainMan
+Brides Of Dracula
+Brutal Paws Of Fury
+Cannon Fodder 2
+Captain Fizz
+Castle Kingdoms
+Celtic Legends
+Covergirl Strip Poker
+ClownOMania
+CoolSpot
+Corporation
+Cosmic Pirate
+Crazy Cars III
+Crossbow
+Curse Of Enchantia (no load/save)
+Cyberball
+Cytron
+Deep Space
+Deflektor
+Deliverance
+Deuteros
+Devious Designs
+DizzyPanic
+Eagle's Rider
+Elf Microvalue
+Elvira Arcade Game
+Empire Strikes Back
+European Champions
+Fears
+First Samurai
+Fist Fighter
+Flashback
+Footballer Of The Year 2
+Future Shock
+Galactic
+Galaxy'89
+Gauntlet II
+GemX
+Goal
+Gods
+GoldenAxe
+Great Giana Sisters
+Gremlins2
+Hammerfist
+Hill Street Blues
+Hybris
+Ice Runner
+Indy 500
+Jaguar XJ220
+James Pond 3
+Jimmy White Whirlwind Snooker (works while WHDLoad gets an MMU trap!)
+Jim Power
+Jurassic Park ECS
+Jurassic Park AGA
+Karate Kid 2
+KGS
+Last Ninja 3
+Lamborghini Challenge
+Licence To Kill
+Logical
+Megalomania
+Mercenary
+Mercs
+Microbe
+Microprose Soccer
+Midnight Resistance
+Moochies, The
+Mr Heli
+Mr Nutz
+Nebulus
+Neighbours
+Ninja Rabbits
+Ninja Warriors
+Nitro
+North & South
+Onslaught
+Operation Firestorm
+Operation Harrier
+Operation Thunderbolt
+Oscar
+Outrun
+Overkill (but graphics problems)
+Quartz
+Pang
+Passing Shot
+Pinball Fantasies
+Pipe Dream
+Plague
+PowerDrive
+PowerMonger
+PPHammer
+Projectyle
+Putty
+Putty Squad Demo
+Putty Squad
+Quadrel
+Rambo 3
+RoboCop
+RoboCop 2
+RocknRoll
+Rodland
+Rotor
+Rotox
+Rugby The World Cup
+SaintDragon
+SAS Combat Simulator
+SecondSamurai-AGA
+Soldier Of Light
+Spitting Image
+Spherical
+Spy Who Loved Me
+StackUp
+Stardust
+Stargoose
+State Of The Art
+Steg
+Steel
+Stunt Track Racer
+SuperCars
+Super Offroad Racer
+SWIV
+Sword Of Sodan
+Teenage Mutant Turtles
+Terminator2
+The Munsters
+The Sword & TheRose
+Tommy Gun
+Trolls
+Trolls AGA
+Truck Racing
+Turbo Outrun
+Turn'N'Burn
+Turrican 1
+Turrican 2
+Turrican 3
+Tusker
+Unreal
+UNSquadron
+Venus
+Viz
+Vroom
+Vroom Multiplayer
+Warhead
+WildStreets
+Wings Of Death
+Winter Super Sports 92
+Wizball
+Wrath Of The Demon
+World Of Legend
+Xenomorph
+Xybots
+Yolkfolk Dizzy
+Zone Warrior
+Awesome
+Moonstone
+Final Fight
+Push Over
+Global Gladiators
+D/Generation AGA
+Another World
+Shanghai
