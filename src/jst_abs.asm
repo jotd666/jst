@@ -31,6 +31,7 @@
 	XREF	AbsFun_Kick37Test
 	XREF	AbsFun_KickVerTest
 	XREF	AbsFun_Priv_SetClockLoad
+	XREF	AbsFun_Priv_SendCDTVCommand
 	XREF	AbsFun_Priv_GetVBR
 	XREF	RelFun_CopyMem
 	XREF	RelFun_AddPart
@@ -335,7 +336,7 @@ init:
 	ENDC
 	
 	JSRABS	FlushCachesSys
-
+    
 	; sets loader stack to start stack, we don't need it anymore
 
 	SET_VAR_CONTEXT
@@ -792,14 +793,19 @@ ExecutePreScript:	; procedure start
 	bne	.exit	; TEST mode: quit
 	JSRLIB	Execute
 .exit
+    move.l  #CMD_STOP,d0
+    jsr AbsFun_Priv_SendCDTVCommand
 	RESTORE_REGS
 	rts
 
 ExecutePostScript:	; procedure start
 	
 	STORE_REGS
-	SET_VAR_CONTEXT
 	
+	SET_VAR_CONTEXT
+    move.l  #CMD_START,d0
+    jsr AbsFun_Priv_SendCDTVCommand
+    
 	jsr	TestTempDir
 	tst.l	d0
 	bne	.exit	; T: is not there: quit
@@ -820,8 +826,8 @@ ExecutePostScript:	; procedure start
 	RESTORE_REGS
 	rts
 
-
-
+    
+    
 TestTempDir:	; procedure start
 	move.l	#tempdirname,D0
 	bsr	AbsFun_TestAssign

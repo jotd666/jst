@@ -14,6 +14,7 @@
 	XDEF	AbsFun_KickVerTest
 	XDEF	AbsFun_Priv_SetClockLoad
 	XDEF	AbsFun_Priv_GetVBR
+	XDEF	AbsFun_Priv_SendCDTVCommand
 
 	XDEF	user_cacheflags
 	XDEF	user_cachemask
@@ -773,6 +774,73 @@ AbsFun_KickVerTest:
 
 ; ** update system time from battery backed up clock
 
+
+AbsFun_Priv_SendCDTVCommand:
+	STORE_REGS
+    move.l  d0,d5
+    
+	; alloc some mem for IORequest
+
+	MOVEQ	#40,D0			
+	MOVE.L	#MEMF_CLEAR|MEMF_PUBLIC,D1
+	move.l	_SysBase,A6
+	JSRABS	AllocateTheMemory
+	move.l	D0,io_request
+	beq	.Quit
+
+	; open cdtv.device
+
+	MOVEA.L	D0,A1
+	LEA	cdtvname(PC),A0	; name
+	MOVEQ	#0,D0			; unit 0
+	MOVE.L	D0,D1			; flags
+	JSRLIB	OpenDevice
+	move.l	D0,D6
+	ext	D6
+	ext.l	D6
+	bne	.Quit		; unable to open
+
+	; prepare the IORequest structure
+
+	MOVEQ	#0,D0
+	MOVEA.L	io_request(pc),A0
+	MOVE.B	D0,8(A0)
+	MOVE.B	D0,9(A0)
+	SUBA.L	A1,A1
+	MOVE.L	A1,10(A0)
+	MOVE.L	A1,14(A0)
+	CLR.L	36(A0)
+
+	move.l	io_request(pc),A0
+
+	move.l	A0,A1
+	move.w	d5,(IO_COMMAND,a1)
+	move.l	_SysBase,A6
+	JSRLIB	DoIO
+
+.Quit:
+	; close timer.device if open
+
+	tst.l	D6
+	bne	.Free
+	MOVE.L	io_request(pc),D1
+	beq	.End
+	move.l	D1,A1
+	move.l	_SysBase,A6
+	JSRLIB	CloseDevice
+
+.Free:		
+	; free the memory
+
+	MOVEQ	#40,D0
+	move.l	io_request(pc),A1
+	move.l	_SysBase,A6
+	JSRABS	FreeTheMemory
+.End:
+	RESTORE_REGS
+	rts
+    
+
 AbsFun_Priv_SetClockLoad:
 	STORE_REGS
 	moveq.l	#0,D6
@@ -911,6 +979,8 @@ grname:
 	dc.b	"graphics.library",0
 intname:
 	dc.b	"intuition.library",0
+cdtvname:
+	dc.b	"cdtv.device",0
 timername:
 	dc.b	"timer.device",0
 battname:

@@ -10,7 +10,7 @@ So it's ideal for:
 
 - CD32 machines with HD & fastmem (Terrible Fire boards with CF cards)
 - Emulated hard disk files (on Raspberry Pi through HappiGA, where the keys are a nuisance sometimes)
-- Kickstart 1.3 machines with HD & fastmem (where it's the only option to run whdload slaves)
+- Kickstart 1.3/CDTV machines with HD & fastmem (where it's the only option to run whdload slaves)
 
 Howto:
 
@@ -28,6 +28,7 @@ Features:
 - Kickstart 1.3 compatible !!
 - quit by CD32/Amiga using the quitkey on an external keyboard, or mapping the quitkey on a joypad button (dangerous!)
 - detects joystick vs cd32 joypad so no wrong "all buttons" readings when plugging a joystick
+- CDTV compatible (stops CD drive before starting games to avoid unwanted interrupts)
 - source code included
 
 (*) features not available on a non-expanded A600 (needs 68010+) unless JOYPAD is explicitly set and game is suitable
