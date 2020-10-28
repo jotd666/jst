@@ -5014,9 +5014,9 @@ recursive_loop:
 	STORE_REGS	D0		; save length
 	add.l	#FULLNAME_SIZE,D0		; add space for the filename
 	JSRABS	GetMemFlag
-	;JSRABS	AllocateTheMemory
-	move.l	_SysBase,A6
-	JSRLIB	AllocMem
+	JSRABS	AllocateTheUnalignedMemory
+	;move.l	_SysBase,A6
+	;JSRLIB	AllocMem
 	move.l	D0,D1	; D1: buffer
 	bne.b	.ok
 	jsr	MemErr
@@ -5975,16 +5975,7 @@ AbsFun_WaitReturn:	; procedure start
 ; out: D1: 0 or MEMF_REVERSE
 
 AbsFun_GetMemFlag:	; procedure start
-	move.l	#MEMF_PUBLIC,D1
-	STORE_REGS	D0
-	moveq.l	#0,D1
-	move.l	#38,D0
-	JSRABS	KickVerTest
-	tst.l	D0
-	bne	.reversebroken
-	or.l	#MEMF_REVERSE,D1		; Any mem, reverted, if KS 39 or higher
-.reversebroken
-	RESTORE_REGS	D0
+	move.l	#MEMF_PUBLIC|MEMF_REVERSE,D1
 	rts
 
 ; initialize patch zone (if PATCH_LOGGED is defined)
@@ -6154,35 +6145,97 @@ AbsFun_ReAllocFastMemory:
 
 ; *** encapsulated AllocMem with MMU boundary alignment
 
+AbsFun_AllocateTheUnalignedMemory:
+	STORE_REGS	D1-A6
+    move.l  d0,d2   ; size
+    move.l  d1,d3   ; flags
+	move.l	_SysBase,A6
+	SET_VAR_CONTEXT
+    bra _alloc_withoutmmu
 ; < D0: required size
 ; < D1: flags
 ; > D0: allocated block (0 if error)
 
 AbsFun_AllocateTheMemory:
 	STORE_REGS	D1-A6
+    move.l  d0,d2   ; size
+    move.l  d1,d3   ; flags
 	move.l	_SysBase,A6
 	SET_VAR_CONTEXT
+    move.l	#38,D0
+	JSRABS	KickVerTest
+	tst.l	D0
+    bne.b   _alloc_withoutmmu   ; no MMU support with 1.3 (too complicated, useless)      
 	cmp.l	#0,A4
-	beq.b	.withmmu	; no context: alloc aligned
+	beq	_alloc_withmmu	; no context: alloc aligned
 	TSTVAR_L	mmucode_ptr
-	bne.b	.withmmu
-
+	bne	_alloc_withmmu
+_alloc_withoutmmu
 	or.l	#MEMF_CLEAR,D1	; always clear memory to avoid problems
-
+    btst    #MEMB_REVERSE,D1
+    beq.b   .doit   ; no need for reverse
+    move.l	#38,D0
+	JSRABS	KickVerTest
+	tst.l	D0
+	bne	.reversebroken
+.doit
+    move.l  d2,d0
 	JSRLIB	AllocMem	; *** no MMU: no page boundary alignment (A1200/nofast)
 .exit:
 	RESTORE_REGS	D1-A6
 	rts
+.reversebroken
+    bclr    #MEMB_REVERSE,D3
+    ; 1.x kickstart, we'll emulate allocmem reverse
+    ; first get available bigest fast memory block
+    move.l  #MEMF_FAST|MEMF_LARGEST,d1
+    JSRLIB  AvailMem
+    move.l  d3,d1
+    cmp.l   d0,d2
+    ; if fits in fast memory, no need for MEMF_REVERSE, just allocate
+    bcs.b   .doit
+    ; okay, no fastmem, since MEMF_REVERSE isn't supported, we'll end up
+    ; allocating memory in the lower part of the base (chip) memory and
+    ; it will crash hard...
+    ; let's simulate MEMF_REVERSE...
+    JSRLIB  Forbid
+   
+    ; let's check the biggest memory block
+    move.l  #MEMF_PUBLIC|MEMF_LARGEST,d1
+    JSRLIB  AvailMem
 
-.withmmu:
-	STORE_REGS	D2
+    ; let's allocate it and see the address
+    move.l  d0,d4
+    move.l  #MEMF_PUBLIC,d1
+    JSRLIB  AllocMem
+    move.l  d0,d5
+    move.l  d0,a1
+    move.l  d4,d0
+    ; free it
+    JSRLIB  FreeMem
+    ; and allocabs the top of it
+    move.l  d5,a1
+    add.l   d4,a1   ; end of block
+    sub.l   d2,a1   ; subtract size
+    move.l  d2,d0   ; size
+    JSRLIB  AllocAbs
+
+    move.l  d0,d2
+    ;;blitz
+    nop
+    move.l  d0,-(a7)
+    JSRLIB  Permit
+    move.l  (a7)+,d0
+    bra .exit
+    rts
+    
+_alloc_withmmu:
 
 	MOVE.L	#PAGE_SIZE_C,D2
-	JSR	AllocMMUMem(PC)
+	bsr	AllocMMUMem
 
-	RESTORE_REGS	D2
-
-	bra	.exit
+	RESTORE_REGS	D1-A6
+    RTS
 
 
 AllocMMUMem

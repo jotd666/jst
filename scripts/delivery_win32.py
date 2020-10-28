@@ -24,7 +24,7 @@ dev=False
 print("making archive for version "+version)
 
 os.chdir(ROOTDIR)
-archname=os.path.join("..","releases",PRODUCT_NAME+"_"+version+".zip")
+archname=os.path.join("releases",PRODUCT_NAME+"_"+version+".zip")
 
 zfn = os.path.realpath(os.path.join(ROOTDIR,archname))
 if os.path.exists(zfn):
