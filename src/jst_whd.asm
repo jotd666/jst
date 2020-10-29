@@ -1534,7 +1534,7 @@ fake_ws_expmemsize:
 WHD_Abort:
 	RESTORE_REGS	D0
 	cmp.l	#TDREASON_OK,D0		; normal termination
-	beq	RelFun_InGameExit
+	beq	WHD_Exit
 	cmp.l	#TDREASON_OSEMUFAIL,D0		; OSEMU FAIL
 	beq	WHD_OsEmuFail
 
@@ -1571,6 +1571,20 @@ WHD_Abort:
 
 	RUNTIME_ERROR_ROUTINE	WrongKickCRC,"Kickfile CRC mismatch"
 
+WHD_Exit
+	SET_VAR_CONTEXT
+	TSTVAR_L	chipmirror
+	bne RelFun_InGameExit       ; able to quit, memory has been mirrored
+    ; can't quit, can't return, just reset
+    ; reset the machine when quitting
+    pea .sup(pc)
+    move.l  (a7)+,$80
+    trap    #0
+.sup
+	lea 2.W,A0
+	RESET
+	jmp (a0)    
+    
 WHD_OsEmuFail:
 	RESTORE_REGS	D0
 	SET_VAR_CONTEXT

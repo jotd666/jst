@@ -214,6 +214,7 @@ TMP_STACK_SIZE = 1000 ; in longwords
 	UWORD	RelVar_iconify_lock
 	UWORD	RelVar_snapmem_allocated
 	UWORD	RelVar_trace_control
+    ;;UWORD   RelVar_is_whdload
 	ULONG	RelVar_kicksize
 	UWORD	RelVar_system_bplcon0
 	UBYTE	RelVar_system_chiprev_bits	; only 1 byte is used

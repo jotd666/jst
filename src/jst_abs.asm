@@ -1146,7 +1146,6 @@ JSTNativeObject:	; procedure start
 WHDNativeObject:	; procedure start
 	SET_VAR_CONTEXT
 	
-;;	SETVAR_W	#1,is_whdload
 	move.w		#1,is_whdload
 
 
@@ -3728,6 +3727,9 @@ AbsFun_SaveOSData:
 	or.l	#MEMF_CLEAR,D1
 	move.l	_SysBase,A6
 	JSRABS	AllocateTheMemory	; no alloc mem fix
+
+	SETVAR_L	D7,maxchip	; = $80000, $100000 or $200000 (typically)
+
 	cmp.l	D7,D0			; is D0 < D7 (max_chip_addr??)
 
 	; if branch: no chance to save osdata
@@ -3739,7 +3741,6 @@ AbsFun_SaveOSData:
 
 	SETVAR_L	D0,chipmirror
 
-	SETVAR_L	D7,maxchip	; = $80000, $100000 or $200000 (typically)
 
 	TSTVAR_L	resume_flag
 	beq.b	.nochipload
@@ -6162,10 +6163,13 @@ AbsFun_AllocateTheMemory:
     move.l  d1,d3   ; flags
 	move.l	_SysBase,A6
 	SET_VAR_CONTEXT
+    move.l  #$F00,$dff180
     move.l	#38,D0
 	JSRABS	KickVerTest
 	tst.l	D0
     bne.b   _alloc_withoutmmu   ; no MMU support with 1.3 (too complicated, useless)      
+    move.l  d2,d0   ; restore size
+
 	cmp.l	#0,A4
 	beq	_alloc_withmmu	; no context: alloc aligned
 	TSTVAR_L	mmucode_ptr
@@ -6220,9 +6224,9 @@ _alloc_withoutmmu
     move.l  d2,d0   ; size
     JSRLIB  AllocAbs
 
-    move.l  d0,d2
-    ;;blitz
-    nop
+    move.l  d0,d3   ; location (debug)
+    move.w  #$F00,$DFF182
+    
     move.l  d0,-(a7)
     JSRLIB  Permit
     move.l  (a7)+,d0

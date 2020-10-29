@@ -948,6 +948,7 @@ RelFun_InGameExit:
 	bra	DoExit
 
 .return
+    ; jst slaves JSR to this routine so it will just ignore InGameExit
 	RESTORE_REGS	D0/A0/A4
 	rts
 .quit:
