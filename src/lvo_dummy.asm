@@ -18,7 +18,7 @@ JOTDNAME:MACRO
 	cnop	0,4
 
 DECL_VERSION:MACRO
-	dc.b	"6.4"
+	dc.b	"6.5"
 	ENDM
 	
 _JstVersion:

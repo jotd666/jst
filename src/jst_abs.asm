@@ -41,13 +41,14 @@
 	XREF	RelFun_WaitMouse
 	XREF	RelFun_StrcpyAsm
 	XREF	RelFun_StrncpyAsm
-	XREF	msg_Loading_kickstart
 	XREF	msg_Can_t_lock_directory
 	XREF	msg_xpk_packed_not_supp
 	XREF	msg_allocating_memory
 	XREF	msg_done
 	XREF	msg_scanning_files
-	
+	XREF    msg_Not_enough_total_memory_to
+    XREF    msg_Executing_pre_script
+    XREF    msg_Executing_post_script
 	XREF	user_cacheflags
 	XREF	user_cachemask
 
@@ -325,7 +326,6 @@ init:
 	IFND	SKELETON_TEST
 	jsr	AddLoadDir		; loaddir set
 
-	jsr	ExecutePreScript
 
 	TSTVAR_L	execute_flag
 	bne	RunDegraded	; it's an executable that we want to run degraded
@@ -341,6 +341,8 @@ init:
 
 	SET_VAR_CONTEXT
 	SETVAR_L	oldstack,system_userstack
+
+    ; execute pre-script, including turning off CD drive on CDTV
 
 	tst.w	is_whdload
 	beq	.runjst
@@ -358,6 +360,9 @@ init:
 	SETVAR_W	#1,just_resumed
 	PRINT_MSG	msg_Resuming
 .skipresume:
+    ; this isn't going to work properly with CDTV drive
+    ; but who cares? JST native loaders aren't used on CDTV in 2020
+	jsr	ExecutePreScript
 
 	GETVAR_L	custom1_flag,D0
 	moveq.l		#0,D1
@@ -411,7 +416,7 @@ file_in_cache:
 	dc.b	0
 	cnop	0,4
 complete_filename:	
-	BLKDECL	b,108,0	; dir/file or just file
+	ds.b	108,0	; dir/file or just file
 	cnop	0,4
 
 ; run the program in DOS mode, degraded
@@ -776,6 +781,7 @@ GetVar:
 ExecutePreScript:	; procedure start
 	
 	STORE_REGS
+	VERBOSE_MSG	msg_Executing_pre_script
 
 	jsr	TestTempDir
 	tst.l	d0
@@ -801,6 +807,7 @@ ExecutePreScript:	; procedure start
 ExecutePostScript:	; procedure start
 	
 	STORE_REGS
+	VERBOSE_MSG	msg_Executing_post_script
 	
 	SET_VAR_CONTEXT
     move.l  #CMD_START,d0
@@ -4725,15 +4732,14 @@ LoadTheFiles:
 	subq.l	#1,D0
 	move.l	D0,prefix_length
 
-	; call our precursive program
+	; call our recursive program
 	; to scan all the directories below fpath
 
 	LEAVAR	fpath,A0
 	IFND	SKELETON_TEST
 	jsr	recursive_loop
 	ENDC
-	
-	
+		
 	; terminate buffer
 
 	moveq.l	#0,D0
@@ -6163,7 +6169,6 @@ AbsFun_AllocateTheMemory:
     move.l  d1,d3   ; flags
 	move.l	_SysBase,A6
 	SET_VAR_CONTEXT
-    move.l  #$F00,$dff180
     move.l	#38,D0
 	JSRABS	KickVerTest
 	tst.l	D0
@@ -6223,10 +6228,28 @@ _alloc_withoutmmu
     sub.l   d2,a1   ; subtract size
     move.l  d2,d0   ; size
     JSRLIB  AllocAbs
-
-    move.l  d0,d3   ; location (debug)
-    move.w  #$F00,$DFF182
     
+    ; caution: AllocAbs doesn't take MEMF_CLEAR flag into account!
+    ; this can cause havoc in the shared reloc variable zone that expects
+    ; all zeroes
+    ; we have to do it manually (would work when allocating the big block
+    ; but that wouldn't be too efficient!)
+    btst    #MEMB_CLEAR,d3
+    beq.b   .noclear    
+    lsr.l   #2,d2   ; size /=4
+    move.l  d0,a0   ; d0: location
+    moveq.l #0,d5
+.clrloop
+    move.l  d5,(a0)+
+    dbf d2,.clrloop
+.noclear
+    ; store the lowest allocated block
+    ; so we're able to compare to top chipmem
+    ; and abort if too low
+    cmp.l   lowest_allocated_block(pc),d0
+    bcc.b   .sk
+    move.l  d0,lowest_allocated_block
+.sk
     move.l  d0,-(a7)
     JSRLIB  Permit
     move.l  (a7)+,d0
@@ -6241,7 +6264,9 @@ _alloc_withmmu:
 	RESTORE_REGS	D1-A6
     RTS
 
-
+lowest_allocated_block
+    dc.l    $FFFFFFFF
+    
 AllocMMUMem
 ; IN:
 ;	D0 = Len

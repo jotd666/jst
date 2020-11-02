@@ -800,6 +800,13 @@ AbsFun_Priv_SendCDTVCommand:
 	ext.l	D6
 	bne	.Quit		; unable to open
 
+    ; wait a while if CMD_STOP
+    cmp.l   #CMD_STOP,d5
+    bne.b   .nowait
+	move.l	_DosBase,A6
+	move.l	#20,D1
+	JSRLIB	Delay		; wait 2/5 second before launching
+.nowait
 	; prepare the IORequest structure
 
 	MOVEQ	#0,D0

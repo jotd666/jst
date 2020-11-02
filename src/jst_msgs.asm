@@ -167,6 +167,11 @@ msg_\1:
 
 	DECL_LABEL	Loading_files_p_p_p_	
 	dc.b	"Loading files...",10,0
+	DECL_LABEL	Executing_pre_script
+	dc.b	"Executing pre script...",10,0
+	DECL_LABEL	Executing_post_script
+	dc.b	"Executing post script...",10,0
+    
 	DECL_LABEL	scanning_files
 	dc.b	"Scanning files...",10,0
 
@@ -217,6 +222,9 @@ msg_\1:
 
 	DECL_LABEL	Not_enough_memory_to	
 	dc.b	"** Not enough expansion memory to boot game!",10,0
+    
+	DECL_LABEL	Not_enough_total_memory_to    
+	dc.b	"** Not enough memory to preload files!",10,0
 
 	DECL_LABEL	Please_CD_to_the_cor	
 	dc.b	"** Please CD to the correct directory !",10,0
@@ -366,6 +374,5 @@ msg_\1:
 	DECL_LABEL	uncacheing_file
 	dc.b	"Uncacheing file ",0
 
-	DECL_LABEL	obsolete_rom
-	dc.b	"JST needs Kickstart V37 or higher",10,0
+
 	even

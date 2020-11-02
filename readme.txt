@@ -1,6 +1,6 @@
 JST is a program which understands JST/whdload slaves and loads its data from hard drive.
 
-It's been around since 1995 but was revived a few years ago, with 1.3 compat. & better whdload compatibility. Now focuses on
+It's been around since 1996 but was revived a few years ago, with 1.3 compat. & better whdload compatibility. Now focuses on
 
 - whdload compatibility
 - low spec machines
@@ -10,7 +10,10 @@ So it's ideal for:
 
 - CD32 machines with HD & fastmem (Terrible Fire boards with CF cards)
 - Emulated hard disk files (on Raspberry Pi through HappiGA, where the keys are a nuisance sometimes)
-- Kickstart 1.3/CDTV machines with HD & fastmem (where it's the only option to run whdload slaves)
+- Kickstart 1.3 machines with HD & fastmem (where it's the only option to run whdload slaves)
+- CDTV stock machines (where it's the only option ATM to run some whdload slaves). There's a big memory
+  restriction and you can't quit without rebooting, but a lot of low-memory & small games can be run
+  (examples: Arkanoid 1 & 2, Silkworm), running the games from a burned bootable CD-ROM
 
 Howto:
 

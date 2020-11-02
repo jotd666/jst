@@ -123,6 +123,17 @@ InitWHDSlave:
 	Mac_printf	"Test mode, exiting"
 	JMPABS	CloseAll
 .nodo
+	move.l	object_entry(pc),A1
+    move.l	ws_BaseMemSize(A1),D0
+    cmp.l   lowest_allocated_block(pc),d0
+    bcs.b   .memokay
+	PRINT_MSG	msg_Not_enough_total_memory_to,v
+	JSRABS	NewLine		
+	JMPABS	CloseAll
+.memokay
+
+	jsr	ExecutePreScript
+
 	moveq.l	#0,D0
 	moveq.l	#0,D1
 	JSRABS	Degrade
