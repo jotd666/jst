@@ -10,7 +10,7 @@
 ; < D0: length
 
 RelFun_CopyMem:
-	STORE_REGS
+	movem.l d0-d3/a0/a1,-(a7)
 
 	cmp.l	A0,A1
 	beq.b	.exit		; same regions: out
@@ -32,7 +32,7 @@ RelFun_CopyMem:
 	bne.b	.copybwd
 
 .exit
-	RESTORE_REGS
+	movem.l (a7)+,d0-d3/a0/a1
 	rts
 
 .cancopyfwd:

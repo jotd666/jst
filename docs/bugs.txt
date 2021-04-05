@@ -2,7 +2,8 @@ General:
 
 - address error (and possibly others like illegal instruction...) are forwarded to the program instead of
   being intercepted by JST exception layer in relocated VBR (ex: Universe: g 1 => universe custom guru screen)
-- add NoMemReverse (kick 2.0+ only)
+- add NoMemReverse
+- set CUSTOM flags to all ones when joypad buttons are pressed, like in CD32load
 - add quit with middle mouse button: Check DATLX bit in POTGOR, i.e. btst #8-8,$dff016 does the trick. 
 - to improve: if file is written to within existing filecache (no size increase) and HDLOAD/LOWMEM not set, then write into filecache and flags
   the file as "dirty" so the new version is written on exit (like whdload does). Allows games to save to big diskfiles (kickemu/no files)

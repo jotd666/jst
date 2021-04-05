@@ -1862,7 +1862,8 @@ GetArgumentsAndCD:	; procedure start
 	SETVAR_L	(A0)+,lowmem_flag	; load from HD instead of RAM even for diskfiles
 	SETVAR_L	(A0)+,buttonwait_flag	; waits fire after loads to be able to read
 	tst.l	(A0)+	; PRELOAD
-	bne.b	.nopreload
+	beq.b	.nopreload
+    ; PRELOAD: cancels the use of hdload or lowmem
 	CLRVAR_L	hdload_flag
 	CLRVAR_L	lowmem_flag
 .nopreload
@@ -2376,7 +2377,7 @@ AbsFun_Priv_ReadDir:
 	STORE_REGS	D1-A6
 	
 	STORE_REGS	D0
-	jsr	AllocInfoBlock
+	bsr	AllocInfoBlock
 	move.l	D0,D7
 	RESTORE_REGS	D0
 
@@ -4919,7 +4920,7 @@ recursive_loop:
 	move.l	A0,A5		; dirname (relative)
 	; allocates infoblock
 
-	jsr	AllocInfoBlock
+	bsr	AllocInfoBlock
 	move.l	D0,D6		; infoblock
 	VERBOSE_MSG	msg_scanning_files
 

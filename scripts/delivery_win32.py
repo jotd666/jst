@@ -14,7 +14,8 @@ PRODUCT_NAME="jst"
 ##vs=b"JOTD Startup !light! "
 ##offset = contents.find(vs)+len(vs)
 ##version = (b"v"+contents[offset:offset+4]).decode("ascii").strip()
-version = "6.3"
+with open(os.path.join(PROGRAM_DIR,os.pardir,"src","version")) as f:
+    version = f.read().strip()
 
 music=False
 dev=False

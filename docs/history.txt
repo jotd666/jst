@@ -1,3 +1,8 @@
+v6.6 (05.04.2021)
+
+- fixed issue that forced the use of PRELOAD to enable LOWMEM or HDLOAD (which is
+  the exact opposite of what it was supposed to do!)
+  
 v6.5 (02.11.2020)
 
 - whdload mode: error message if lowest allocated (chipmem) block is below max chipmem (CDTV/lowmem amigas)
