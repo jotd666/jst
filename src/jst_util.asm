@@ -193,10 +193,11 @@ RelFun_StrcpyAsm:
 ; out: nothing
 
 RelFun_StrncpyAsm:
-	STORE_REGS
+	STORE_REGS  d2/A0-A1
 
 	move.l	D0,A0
 	move.l	D1,A1
+    subq.l  #1,d2
 .copy
 	move.b	(A0)+,(A1)+
 	beq.b	.exit
@@ -206,7 +207,7 @@ RelFun_StrncpyAsm:
 
 	clr.b	(A1)
 .exit
-	RESTORE_REGS
+	RESTORE_REGS    d2/A0-A1
 	rts
 
 ; *** Sets buffer in upper case
@@ -788,4 +789,46 @@ AckKeyboard:
 	RESTORE_REGS	D0
 	rts
 
-
+; parse integer from string
+; < A0: pointer on C string
+; > D0: value
+; > D1: -1 if ok, position of the string if error
+parse_integer:
+    movem.l  d2/d3,-(a7)
+    ; go to end of string
+    moveq.l #-1,d1
+.loop1
+    addq.l  #1,d1
+    tst.b   (a0,d1.w)
+    bne.b   .loop1
+    ; d1 is the number of chars
+    moveq.l #0,d0
+    moveq.l #0,d2
+    subq.l  #2,d1   ; 10th power minus 1
+.loop2
+    move.b  (a0)+,d2
+    beq.b   .out
+    
+    cmp.b   #' ',d2
+    beq.b   .skip
+    sub.b   #'0',d2
+    bcs.b   .error
+    cmp.b   #10,d2
+    bcc.b   .error
+    move.w  d1,d3
+    bmi.b   .doadd
+.muloop
+    mulu    #10,d2
+    dbf d3,.muloop
+.doadd
+    add.l   d2,d0
+.skip
+    subq.l  #1,d1
+    bra.b   .loop2
+.out    
+    movem.l  (a7)+,d2/d3
+    rts
+.error
+    moveq.l #0,d0
+    bra.b   .error
+    

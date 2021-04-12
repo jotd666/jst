@@ -872,7 +872,7 @@ RelFun_ResetDisplay:
 	; force NTSC
 	move.w	#$0000,beamcon0(A5)	; go NTSC
 .2	
-	MOVE.W	#$0,fmode(A5)		; disable AGA-fetch rate
+	;;MOVE.W	#$0,fmode(A5)		; disable AGA-fetch rate why ???
 
 	RESTORE_REGS	A4/A5
 	rts
@@ -2039,8 +2039,8 @@ UrgentExit:
 
 	move.w	#$2000,SR
 	JSRABS	UserMode
-
-	; enhance CPU caches
+    
+	; enhance CPU caches, restore VBR
 
 	JSRABS	EnhanceCpu
 
@@ -3604,17 +3604,12 @@ RelFun_ReadFile:
 
 	move.l	D4,D0			; restores D0
 
-	move.w	is_whdload(pc),D4
-	bne.b	.error			; don't swap if WHDLoad
-
 	LEAVAR	lastfile_buffer,A0	; set by ReadFileFast, relocated filename
 	JSRGEN	ReadFileHD		; not found in fast, try from HD
 .exit
 	RESTORE_REGS	D4/A0/A4
 	rts
-.error:
-	moveq	#1,D0
-	bra.b	.exit
+
 
 ; ReadFile. Hard Disk version
 ; Reads a file in the chipmirror or in fast during game
@@ -4864,7 +4859,21 @@ RelFun_Priv_EndSaveOsData:
 	; *** install OS emu if present
 
 	JSRGEN	InstallHarryOSEmu
+	
+	; don't clear A1/A6
 
+	bra	.regclr
+
+	; clear all registers (except A7 of course!!)
+.noosemu
+	; clear registers A1 & A6
+
+	sub.l	A6,A6
+	sub.l	A1,A1
+
+	; clear all registers except A1 (diskio pointer) and A6 (execbase pointer)
+	
+.regclr
 	; detect joystick types, twice
 	bsr	_detect_controller_types
 	bsr	_detect_controller_types
@@ -4882,21 +4891,8 @@ RelFun_Priv_EndSaveOsData:
 	cmp.l	#ALL_FRONT_BUTTONS_MASK,d0
 	beq.b	.joyloop
 	dbf		d2,.joyloop
-	
-	; don't clear A1/A6
+    
 
-	bra	.regclr
-
-	; clear all registers (except A7 of course!!)
-.noosemu
-	; clear registers A1 & A6
-
-	sub.l	A6,A6
-	sub.l	A1,A1
-
-	; clear all registers except A1 (diskio pointer) and A6 (execbase pointer)
-	
-.regclr
 	moveq.l	#0,D0
 	moveq.l	#0,D1
 	moveq.l	#0,D2

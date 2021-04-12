@@ -562,7 +562,8 @@ jst_resload_LoadKick
 jst_resload_LoadFile:
 	moveq.l	#-1,D1
 	moveq.l	#0,D0
-	
+
+    
 	JSRGEN	ReadFile
 	exg	D0,D1	; swap D0 and D1 registers
 	tst.l	D1	; D1=0: okay

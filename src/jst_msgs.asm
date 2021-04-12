@@ -223,8 +223,18 @@ msg_\1:
 	DECL_LABEL	Not_enough_memory_to	
 	dc.b	"** Not enough expansion memory to boot game!",10,0
     
+    ; we reached an all-time low: not enough mem to swap OS
+    ; not enough mem to preload... In some cases where there aren't a lot
+    ; of files and 512MB mem is required, PRELOAD
+    ; could work on a 1 meg system (can't quit but playable) but not LOWMEM
+	DECL_LABEL	Not_enough_memory_to_run_without_preload	
+	dc.b	"** Not enough memory to run with LOWMEM",10,0
+    
 	DECL_LABEL	Not_enough_total_memory_to    
 	dc.b	"** Not enough memory to preload files!",10,0
+    
+	DECL_LABEL	Not_enough_chip_memory_to    
+	dc.b	"** Not enough chip memory for this slave!",10,0
 
 	DECL_LABEL	Please_CD_to_the_cor	
 	dc.b	"** Please CD to the correct directory !",10,0
@@ -274,6 +284,9 @@ msg_\1:
 	DECL_LABEL	Please_check_addr_p_	
 	dc.b	"Please check addr. modes and/or use optimize option",10,0
 
+	DECL_LABEL	slave_name_is_required	
+	dc.b	"slave name is required",10,0
+    
 	DECL_LABEL	not_found_or_empty_	
 	dc.b	" not found or empty!!",10,0
 

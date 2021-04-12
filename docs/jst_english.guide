@@ -1,7 +1,7 @@
 @database "JOTD HD Install Collection Documentation"
 @$VER:4.8
 @REM
-@REM © 1995-2001 Jean-François Fabre/Ralf Huvendiek
+@REM © 1995-2021 Jean-François Fabre/Ralf Huvendiek
 @REM
 @Index Arguments
 @NODE Main "JOTD Startup Documentation"
@@ -9,7 +9,7 @@
 *****************************************************************************
 
                             @{b}JOTD Startup V4.8@{ub}
-             © Copyright 1995-2001 Jean-François Fabre/Ralf Huvendiek
+             © Copyright 1995-2021 Jean-François Fabre/Ralf Huvendiek
              
 *****************************************************************************
 
@@ -58,8 +58,8 @@ impossible to beat without cheating.
 
 From v4.7, as JST is now free, the RESUME feature is available to everyone.
 
-JOTD HD Startup is © 1995-2001 Jean-François FABRE
-JOTDStartup is © 2001 Jean-François FABRE
+JOTD HD Startup is © 1995-2021 Jean-François FABRE
+JOTDStartup is © 2021 Jean-François FABRE
 
 @ENDNODE
 
@@ -95,7 +95,7 @@ and that's why I offer my services to help you:
 From v4.7, due to many factors, I decided to release JST for free, with full
 source code. Here are the main reasons:
 
-· Some undiscovered bugs still show up (lockup while loading files...)
+· Some undiscovered bugs still show up (lockup while loading files...) (note: fixed in version 6)
 · Lots of trouble with PPC/Appolo boards and/or some mysterious patches
 · Smart bastards saying that JST always crashes. They've got the source. They can debug.
 · Nice people wanting to help in JST debugging (and maybe extensions)
@@ -105,7 +105,7 @@ source code. Here are the main reasons:
 · I made enough money with that piece of shit (about 150 registrations in 4 years)
 · WHDLoad is more stable, WHDLoad works better, blah, blah ...
 · Ok, shut the f**k up, JST is 20DM cheaper now :)
-· You *HAVE* to see RESUME working without paying :)
+· You *HAVE* to see RESUME working without paying :) (note: not sure it still works on version 7)
 
 @{b}Registered Features now available to everyone@{ub}
 
@@ -1057,7 +1057,7 @@ used in JST.
 
 · Me (main developer).
 · Ralf Huvendiek (co-developer, added MMU features, fixed loads of bugs).
-· Joannes Geiss for the hunk decoding code.
+· Joannes Geiss for the hunk decoding code (now replaced by a better one)
 · Alain Malek for CIAs and keyboard reset code.
 
 @ENDNODE

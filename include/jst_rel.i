@@ -69,7 +69,7 @@ TMP_STACK_SIZE = 1000 ; in longwords
 	ULONG	RelVar_fileidlen
 	ULONG	RelVar_message_ptr
 	ULONG	RelVar_whd_sysoffset
-
+    ULONG   RelVar_old_vbi
 	; option flags
 
 	LABEL	Rel_STARTFLAGS

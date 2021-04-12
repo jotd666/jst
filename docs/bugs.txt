@@ -9,9 +9,10 @@ General:
   the file as "dirty" so the new version is written on exit (like whdload does). Allows games to save to big diskfiles (kickemu/no files)
   quickly. Without this, it just takes too long when writing several sectors of the disk because the whole file is written (and there are
   OS swaps as well)
+- on osswaps (lowmem), sometimes display returns as trashed (pinball dreams startup). Doesn't prevent to play the game, though.
 - running from workbench/icon seems to be broken from kickstart 1.3. It hasn't been tested a lot recently.
 - TODO: TST regs on whdload calls (to set condition codes properly)
-- do more tests on savegames (Faery Tale Adventure, Universe, others...) as OS swaps / file writes seem to be
+- do more tests on savegames (Faery Tale Adventure, Universe, others...) as file writes seem to be
   far from perfect
 - support QUITKEY=0x00 (currently ignored)
 - if JOYPAD=2 is set and joystick is in port 1, then enable joypad=1 and copy params from 1 to 0
@@ -21,7 +22,7 @@ General:
 - ExNext emulation is missing (not possible to scan a directory under kickemu slaves)
 - Examine/GetFileSize only work if the file is in cache (so not with LOWMEM/HDLOAD). That will probably stay like this
   LOWMEM/HDLOAD are rarely used flags right now, even whdload is almost unusable without PRELOAD (lots of flashes).
-- A lot of integer instructions aren't emulated on a 68060 (compared to whdload extensive emulation)
+- A lot of integer instructions aren't emulated on a 68060 (compared to whdload extensive emulation): Speedball 2 doesn't work on 060
 - JOYPAD mode blocks the music (Fire & Ice OCS) as soon as a button is pressed because needs using CIA-A timer and used by
   the game already, there's nothing much we can do about that...
 
@@ -46,3 +47,13 @@ Universe (only from Kick1.3?):
 
 from the icon (only, as it is working if the game is launched from the shell) :
 - when attempting to save the game -> black screen (and nothing more). After a reset, and a re-launch of the game, the position saved can be loaded.
+
+General advice for low memory users:
+
+- you can use LOWMEM, but sometimes it's not possible because there's not enough memory to save the OS so JST is able to
+  swap memory to load more files.
+- if you can't use LOWMEM, you can still omit it, but then you may run out of file preloading memory... Oh damn..., but
+  in some cases, the slave can use files that can be packed (using ProPack), reducing the preloading memory. For instance
+  silkworm can run on 1MB total mem (no quit possible) if files are packed.
+  (note: XPK packing doesn't count and is anyway not supported, but useless here: the unpacking would occur before game
+  is started, so it doesn't help memory-wise)

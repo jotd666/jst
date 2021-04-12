@@ -43,6 +43,13 @@ SetCustomRegs:
 
 	bsr	RelFun_FreezeAll
 
+    ; wait for VPOS to get to the bottom of screen
+	move.l	#$12F00,d1
+.wait
+	move.l	$DFF004,d0
+	cmp.l	d1,d0
+	bcs.b	.wait
+
 	; set new values
 
 	lea	$DFF000,A5		

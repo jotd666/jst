@@ -73,6 +73,7 @@ _SysBase = 4
 	move.l	D0,A1
 
 AbsFun_Enhance:
+    
 	; the cpu stuff
 
 	bsr	AbsFun_Priv_EnhanceCpu
@@ -82,7 +83,34 @@ AbsFun_Enhance:
 	bsr	AbsFun_Priv_EnhanceGfx
 
 	rts
-
+    
+    ; var context is set
+kill_vbi
+    TSTVAR_L	execute_flag
+    bne.b   .leave_vbi
+    ; VBR is now zeroed, install our own interrupt
+    move.l  a1,-(a7)    
+    SETVAR_L  $6C.W,old_vbi
+    lea dummy_vbl_handler(pc),a1    
+    move.l  a1,$6C
+    move.l  (a7)+,a1
+.leave_vbi
+    rts
+    
+restore_vbi
+    TSTVAR_L	execute_flag
+    bne.b   .leave_vbi
+    move.l  a1,-(a7)
+    ; vbi in case it was trashed
+    GETVAR_L  old_vbi,a1
+    cmp.l   #0,a1
+    beq.b   .not_trashed
+    move.l  a1,$6C.W
+.not_trashed
+    move.l  (a7)+,a1
+.leave_vbi
+    rts
+    
 AbsFun_Priv_EnhanceCpu:
 	STORE_REGS
 	SET_VAR_CONTEXT
@@ -141,6 +169,8 @@ AbsFun_Priv_EnhanceGfx:
 	tst.b	degraded_gfx
 	beq	.exit
 
+    bsr restore_vbi
+
 	move.l	_GfxBase,D0
 	beq	.1
 
@@ -159,7 +189,7 @@ AbsFun_Priv_EnhanceGfx:
 	move.l	D0,A6
 
 	bsr	EnhanceBandWidth
-
+    
 	move.l	my_actiview(PC),D0
 	beq.b	.1
 	move.l	D0,A1
@@ -188,6 +218,7 @@ AbsFun_Priv_EnhanceGfx:
 	clr.b	degraded_gfx
 .exit
 
+    
 	RESTORE_REGS
 	rts
 
@@ -235,17 +266,14 @@ _DegradeCpu:
 	STORE_REGS
 	SET_VAR_CONTEXT
 
-	; don't touch VBR if execute is set
-
-	TSTVAR_L	execute_flag
-	beq	.skipzerovbr
-	TSTVAR_L	system_vbr
-	beq	.skipzerovbr	; VBR is already at zero or 68000, skip all VBR part
-
 	; no interrupts please
 
 	move.l	_SysBase,A6
 	JSRLIB	Disable
+    
+	TSTVAR_L	system_vbr
+	beq	.skipzerovbr	; VBR is already at zero or 68000, skip all VBR part
+
 
 	; save the zero page vectors in a buffer
 
@@ -272,13 +300,15 @@ _DegradeCpu:
 	; cache flush
 
 	JSRABS	FlushCachesSys
+.skipzerovbr:
 
-	; interrupts again
+	; enable interrupts again
 
 	move.l	_SysBase,A6
 	JSRLIB	Enable
+    
 
-.skipzerovbr:
+
 	RESTORE_REGS
 
 	bsr	DisCaches
@@ -332,6 +362,11 @@ _DegradeGfx:
 	bsr	DegradeBandWidth
 
 	JSRGEN	ResetDisplay
+
+    ; unless we're in "execute" mode, kill vertical blank
+    ; interrupt as it writes to COP2LC (at least on kick 1.3)
+    
+    bsr kill_vbi
 
 	; now adjust custom chips so AGA does not mess it all up
 
@@ -413,6 +448,18 @@ EnhanceSprites:
 .exit
 	rts
 
+
+    
+; this handler allows to avoid that the system overwrites the second copperlist
+; trashing display when OS is swapped to load data
+; it doesn't prevent hard disk operations
+; fortunately they don't depend on vertical blank or we would be screwed
+
+dummy_vbl_handler:
+    move.w  #$70,$DFF000+intena
+    rte
+
+    
 ; *** Degrades everything
 ; in: D0,D1: value and mask for caches control
 ; (the same format as in CacheControl())
@@ -859,7 +906,7 @@ AbsFun_Priv_SetClockLoad:
 	move.l	_SysBase,A6
 	JSRLIB	OpenResource
 	move.l	D0,BattBase
-	beq	SCL_Quit
+	beq	SCL_End
 
 	; alloc some mem for IORequest
 

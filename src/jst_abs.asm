@@ -47,8 +47,11 @@
 	XREF	msg_done
 	XREF	msg_scanning_files
 	XREF    msg_Not_enough_total_memory_to
+	XREF    msg_Not_enough_chip_memory_to
+    XREF    msg_Not_enough_memory_to_run_without_preload
     XREF    msg_Executing_pre_script
     XREF    msg_Executing_post_script
+    XREF    msg_slave_name_is_required
 	XREF	user_cacheflags
 	XREF	user_cachemask
 
@@ -57,6 +60,7 @@
 	XDEF	_DosBase
 	XDEF	_SysBase
 	XDEF	RelocErr
+    XDEF    parse_integer
 	XDEF	gene_variables
 	XDEF	AbsFun_AllocateTheMemory
 	XDEF	AbsFun_FreeTheMemory
@@ -72,7 +76,6 @@
 	; variables
 
 	XDEF	verbose_flag 
-
 
 
 
@@ -1183,6 +1186,24 @@ GET_CUSTOM_OPT:MACRO
 	SETVAR_L	d0,custom\1_flag
 .skipcustom\1
 	ENDM
+    
+GET_CUSTOM_OPT_13:MACRO
+	move.l		(A0)+,D0	; CUSTOM1
+	beq.b		.skipcustom13\1
+    lea temp_filename_buffer(pc),a1
+    ;bcpl to c string
+    bsr bcpl_arg_string_copy
+    ; convert to integer
+    move.l A0,-(a7)
+    move.l  a1,a0
+    ; < A0: pointer on C string
+    ; > D0: value
+    ; > D1: -1 if ok, position of the string if error
+    jsr parse_integer
+	SETVAR_L	d0,custom\1_flag
+    move.l  (a7)+,a0
+.skipcustom13\1
+	ENDM
 	
 FIND_OPTION:MACRO
 	lea	\1ToolType,A1
@@ -1511,6 +1532,7 @@ GetArgumentsAndCD:	; procedure start
 
 .fromcli
 
+    
 .usereadargs
 	move.l	#36,D0
 	JSRABS	KickVerTest
@@ -1529,57 +1551,39 @@ GetArgumentsAndCD:	; procedure start
 	
 	bsr	get_args_BCPL
 	
-	lea	ProgArgs,A0
+	lea	ProgArgs(pc),A0
 	move.l	(A0)+,D0
-	beq.b	.ska
+	bne.b	.slaveok
+    PRINT_MSG	msg_slave_name_is_required
+    JMPABS  CloseAll
+
+.slaveok
 	; Arg 1: SLAVE
-	;;blitz
-	;;nop
-	
-	move.l	#object_name,D1
-	lsl.l	#2,d0
-	moveq.l	#0,d2
-	move.b	d0,d2	; size
-	add.l	#1,d0	; contents
-	jsr	RelFun_StrncpyAsm
-.ska
+	lea object_name(pc),A1
+    bsr bcpl_arg_string_copy
+
 	; Arg 2: CUSTOM (aka USERDATA)
 	move.l	(A0)+,D0
 	beq.b	.ska2
-	lsl.l	#2,d0
-	moveq.l	#0,d2
-	move.b	d0,d2	; size
-	add.l	#1,d0	; contents
 	LEAVAR	custom_str,A1
-	move.l	A1,D1
-	jsr	RelFun_StrncpyAsm
+    bsr bcpl_arg_string_copy
 .ska2
 	; Arg 3: DATA
 	move.l	(A0)+,D0
 	beq.b	.skb
-	lsl.l	#2,d0
-	moveq.l	#0,d2
-	move.b	d0,d2	; size
-	add.l	#1,d0	; contents
 	LEAVAR	loaddata_dir,A1
-	move.l	A1,D1
-	jsr	RelFun_StrncpyAsm
+    bsr bcpl_arg_string_copy
 
 .skb
 	bsr	.get_common_switches
 	
 	move.l	(A0)+,D0			; CHANGE IT IF ADD OTHER TOOLTYPES BETWEEN
 	beq.b	.skc
-	lsl.l	#2,d0
-	moveq.l	#0,d2
-	move.b	d0,d2	; size
-	add.l	#1,d0	; contents
-
-	move.l	#quitkey_str,D1
-	jsr	RelFun_StrncpyAsm
+	lea quitkey_str(pc),a1
+    bsr bcpl_arg_string_copy
 .skc
 
-	bsr	.get_custom_switches
+	bsr	.get_custom_switches_13
 	bra	.noregargs
 .readargs_v36:
 	move.l	#Template_V36,d1
@@ -1605,7 +1609,7 @@ GetArgumentsAndCD:	; procedure start
 	
 	; ** copy the object name in a buffer
 
-	lea	ProgArgs,A0
+	lea	ProgArgs(pc),A0
 	move.l	(A0)+,D0
 	beq.b	.skn
 	move.l	#object_name,D1
@@ -1851,6 +1855,14 @@ GetArgumentsAndCD:	; procedure start
 	GET_CUSTOM_OPT	5
 	rts
 	
+.get_custom_switches_13:
+	GET_CUSTOM_OPT_13	1
+	GET_CUSTOM_OPT_13	2
+	GET_CUSTOM_OPT_13	3
+	GET_CUSTOM_OPT_13	4
+	GET_CUSTOM_OPT_13	5
+	rts
+	
 	; since there's macro which allows to share V34 or V36 args
 	; we can also share the code (and the order) of the shared args :)
 .get_common_switches:
@@ -2057,6 +2069,22 @@ findoption:
 	tst.l	d0
 	rts
 
+; < D0: bcpl string (with leading size byte)
+; < A1: dest C string
+bcpl_arg_string_copy
+    movem.l D0-D2/A1,-(a7)
+    move.l  a1,d1
+	lsl.l	#2,d0
+	moveq.l	#0,d2
+    move.l  d0,a1
+	move.b	(a1),d2	; size   (has been wrong since the start!!!)
+	add.l	#1,d0	; contents
+	jsr	RelFun_StrncpyAsm
+    movem.l (a7)+,D0-D2/A1
+    rts
+    
+    
+    ; thanks Toni for this 1.3 read argument code
 BCPL_RdArgs = 78
 	
 	; a1 = pointer to result array. Must be LONG aligned!
@@ -2078,6 +2106,8 @@ get_args_BCPL:
 	; d0 = gv index
 	; d1-d4 = bcpl parms
 
+BCPL_STACK = 3000
+
 call_bcpl:
 	movem.l d2-d7/a2-a6,-(sp)
 
@@ -2093,7 +2123,7 @@ call_bcpl:
 	move.l d0,a4
 
 	; allocate BCPL stack
-	move.l #1500,d0
+	move.l #BCPL_STACK,d0
 	move.l #65536+1,d1
 	JSRLIB	AllocMem
 	move.l d0,d7
@@ -2116,7 +2146,7 @@ call_bcpl:
 
 .nomem:
 	move.l d7,a1
-	move.l #1500,d0
+	move.l #BCPL_STACK,d0
 	JSRLIB	FreeMem
 
 
@@ -2683,7 +2713,7 @@ MMUToolType:	dc.b	"MMU",0
 
 
 	cnop	0,4		; leave this long word alignment
-ProgArgs:	blk.l	256,0
+ProgArgs:	ds.l	256,0
 ProgArgsEnd:
 iconbase:	dc.l	0
 
@@ -2731,7 +2761,6 @@ ReadTheFileHD:
 	STORE_REGS	D2-A6
 
 	SET_VAR_CONTEXT
-
 	jsr	VerboseNameA0
 
 	move.l	D0,D6			; command
@@ -2761,7 +2790,6 @@ ReadTheFileHD:
 	bpl	.readapart		; length specified: don't get the filesize
 
 .getlen
-
 	move.l	A0,D0
 	JSRABS	GetFileLengthAbs
 	cmp.b	#5,D6			; getlength command?
@@ -2779,7 +2807,7 @@ ReadTheFileHD:
 
 .reallyread
 	move.l	D0,D1
-	sub.l	D7,D1			; if there's an offset, substract it
+	sub.l	D7,D1			; if there's an offset, subtract it
 .readapart
 	move.l	A1,D4			; buffer
 	cmp.l	(RelVar_maxchip,A4),D4
@@ -3742,6 +3770,7 @@ AbsFun_SaveOSData:
 
 	; if branch: no chance to save osdata
 	; no OS swap and no quit, but the game will run
+    ; (only if all files are PRELOADED)
 
 	bcs.b	.mirrortoolow		
 	
@@ -4363,10 +4392,37 @@ AbsFun_Priv_UserMode:
 	SET_VAR_CONTEXT
 	move.l	_SysBase,A6
 	GETVAR_L	system_superstack,D0
-	JSRLIB	UserState
+	bsr DoUserState
 	RESTORE_REGS	D0/D1/A0/A1/A4/A6
 .userstate:
 	rts
+
+DoUserState:
+    move.l  d0,-(a7)
+	move.l	#36,D0
+	JSRABS	KickVerTest
+	tst.b	D0
+    movem.l (a7)+,d0
+	bne.b   .patched    ; use patched, no need for setpatch
+    
+    ; use standard routine on V2.0+
+    JSRLIB	UserState
+    rts
+    
+.patched
+; UserState is broken on kick 1.3 (not patched) and fails on 68010+.
+; if kickstart 1.3 then use the routine installed by setpatch
+      MOVE.L (A7)+,D1       ; save return address in D1
+      MOVE.L A7,USP         ; save supervisor stack in user stack (WTF??)
+      MOVEA.L D0,A7         ; set user stack
+      MOVEA.L A5,A0
+      LEA.L .next(pc),a5
+      JMP (_LVOSupervisor,A6)
+.next:
+      MOVEA.L A0,A5
+      MOVE.L D1,(2,A7)  ; set return location
+      AND.W #$dfff,(A7) ; remove supervisor mode from returning SP
+      RTE
 
 TestSuperState:
 	STORE_REGS	D0/D1/A0/A1/A6
@@ -5752,7 +5808,7 @@ AbsFun_CloseAll:
 DoClose:
 
 	SET_VAR_CONTEXT
-
+    
 	jsr	ExecutePostScript
 
 	VERBOSE_MSG	msg_Freeing_loader
@@ -6719,10 +6775,12 @@ examine:
 	STORE_REGS	D1-A6
 
 	tst.l	verbose_flag
-	beq.b	.nov
-	Mac_print	"-> Examine "
+	beq	.nov
+	Mac_print	"-> Examine(lock="
 	Mac_printx	D1
+	Mac_print	",infoblock="
 	Mac_printx	D2
+	Mac_print	")"
 .nov
 
 	move.l	_DosBase,A6

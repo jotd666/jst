@@ -45,7 +45,7 @@ $(OBJDIR)/jst_util.o: jst_util.asm jst_util_ro.asm jst_crc16.asm
 
 $(OBJDIR)/jst_rel.o: jst_rel.asm ReadJoyPad.s reloc_kickstart.asm  send_key_event.asm virtual_mouse.asm virtual_keyboard.asm \
 			jst_util.asm jst_cop.asm jst_hunk.asm Emulate_MOVEP.asm \
-			jst_whd.asm jst_sna.asm RNC1Decrunch.asm ATNDecrunch.asm TPWMDecrunch.asm RNC12Decrunch.asm  $(INCDIR)/jst_macros.i \
+			jst_whd.asm jst_cus.asm jst_sna.asm RNC1Decrunch.asm ATNDecrunch.asm TPWMDecrunch.asm RNC12Decrunch.asm  $(INCDIR)/jst_macros.i \
 			$(INCDIR)/jstrel_macros.i $(INCDIR)/jst_rel.i \
 			$(INCDIR)/gp_macros.i $(INCDIR)/osemu.i
 	$(ASM) $(ASMOPTS) jst_rel.asm -o $(OBJDIR)/jst_rel.o

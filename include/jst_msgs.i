@@ -62,6 +62,7 @@
 	XREF	msg_AllocExtMem_po_pf_ca
 	XREF	msg_Alloc_BitMem_po_pf_c
 	XREF	msg_Not_enough_memory_to
+	XREF	msg_Not_enough_memory_to_run_without_preload
 	XREF	msg_Please_CD_to_the_cor
 	XREF	msg_Cant_Allocate_Mem
 	XREF	msg_Unexpected_error_

@@ -34,5 +34,6 @@
 	XDEF	RelFun_ResetCIAs
 
 	XDEF	AbsFun_HexToString
-
+    
+    XDEF    parse_integer
 	include	"jst_util.asm"

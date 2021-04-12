@@ -131,14 +131,54 @@ InitWHDSlave:
 	JSRABS	NewLine		
 	JMPABS	CloseAll
 .memokay
-
+    ; well we have to check chipmem
+    move.l _SysBase,A6
+    move.l MaxLocMem(a6),d1
+    cmp.l   d1,d0
+    beq.b   .chipokay
+    bcs.b   .chipokay
+	PRINT_MSG	msg_Not_enough_chip_memory_to,v
+	JSRABS	NewLine		
+	JMPABS	CloseAll
+.chipokay
+    ; last chance before turning the os off: check if we have a chunk of memory big enough to
+    ; hold the chipmem block
+    ; not as easy as it seems but we can try to predict most cases and prevent a hard crash
+    ; when the game is running and is noticing that there's not enough memory to swap the os
+    ; and a file is not preloaded...
+   	move.l	_SysBase,A6
+    move.l  #MEMF_FAST|MEMF_LARGEST,d1    
+    JSRLIB  AvailMem    
+	move.l	object_entry(pc),A1
+    cmp.l	ws_BaseMemSize(A1),D0
+    bcc   .fastokay       ; we'll be able to save chipmem in fast
+    ; not enough fast, but maybe with a big chipmem block?
+    move.l  #MEMF_CHIP|MEMF_LARGEST,d1    
+    JSRLIB  AvailMem    
+	move.l	object_entry(pc),A1
+    sub.l	ws_BaseMemSize(A1),D0   ; some memory we can't count on (approx..)
+    add.l   #$10000,d0              ; be more optimistic, the first $10000 bytes aren't counted
+    bmi.b   .nocando
+    cmp.l	ws_BaseMemSize(A1),D0
+    bcc.b   .fastokay               ; there's still enough mem to save chipmem
+    ; not enough mem to save chipmem, check that PRELOAD is set else game will crash at once
+	TSTVAR_L	hdload_flag
+    bne.b   .nocando
+	TSTVAR_L	lowmem_flag
+    beq.b   .fastokay
+    ; preload isn't set: bail out before crash
+.nocando    
+	PRINT_MSG	msg_Not_enough_memory_to_run_without_preload,v
+	JSRABS	NewLine		
+	JMPABS	CloseAll
+.fastokay
 	jsr	ExecutePreScript
 
 	moveq.l	#0,D0
 	moveq.l	#0,D1
-	JSRABS	Degrade
-
-
+	JSRABS	Degrade   
+    
+    
 	move.l	object_entry(pc),A1
 
 	move.w	ws_Version(A1),D0
@@ -174,7 +214,9 @@ InitWHDSlave:
 
 	move.l	ws_BaseMemSize(A1),D0
 	JMPABS	SaveOSData		; save OS data & jump to slave
-	
+
+        
+        
 RelocKickstart:	
 	include		"reloc_kickstart.asm"
 
