@@ -66,7 +66,8 @@ msg_\1:
 	dc.b	"Write to disk disabled (NOOSSWAP)",10,0
 
 	DECL_LABEL	xpk_packed_not_supp
-	dc.b	"XPK packed files aren't supported",10,0
+	dc.b	"XPK packed files aren't supported",10
+    dc.b    "You can use xfddecrunch or decrunchall script on the data files",10,0
 	DECL_LABEL	Obsolete_version_of_
 	dc.b	"Obsolete version of OSEmu loaded",10,0
 

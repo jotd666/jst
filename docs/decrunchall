@@ -1,0 +1,20 @@
+.key DIRECTORY/A
+.bra {
+.ket }
+
+; I've written this script a long time ago to decrunch all files of a given
+; directory, recursively.
+;
+; if files are XPK packed this will allow JST to run
+;
+; be careful, though, as xfddecrunch will decrunch packed files that aren't XPK so
+; you can't use it twice on a directory. Also only use when JST reports that files are packed
+;
+; (some games use RNC or other packers that xfddecrunch supports, that could break the game)
+
+echo > t:dcr "failat 20"
+list {DIRECTORY} LFORMAT "xfddecrunch >NIL: *"%f%s*"" ALL >> t:dcr
+execute t:dcr
+delete t:dcr QUIET
+
+

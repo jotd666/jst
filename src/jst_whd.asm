@@ -1,6 +1,21 @@
 ; WHDLoad emulation source code
 ; relocatable routines
 
+WHD_STACK_SIZE = $200
+
+RELOC_STACK:MACRO
+	; save old stack pointer, relocate stack for the cdio exec (eats a lot of stack)
+	movem.l	A1,-(A7)
+	lea	old_stack(pc),A1
+	move.l	A7,(a1)
+	add.l	#4,(A1)	; rectify address
+	movem.l	(A7)+,A1
+	lea	whd_stack(pc),A7	; install a new stack
+	ENDM
+UNRELOC_STACK:MACRO
+	move.l	old_stack(pc),A7	; restore original stack
+	ENDM
+
 DEF_WHDOFFSET:MACRO
 fake_\1:
 	bra.w	jst_\1
@@ -363,6 +378,7 @@ jst_resload_Delta
 ; limitation: if file isn't preloaded that doesn't work (file is always "not found")
 
 jst_resload_Examine
+    RELOC_STACK
 	STORE_REGS	D2-A5
 	;;blitz
 	SET_VAR_CONTEXT
@@ -442,6 +458,7 @@ jst_resload_Examine
 	moveq.l	#0,d1
 .out	
 	RESTORE_REGS	D2-A5
+    UNRELOC_STACK
 	RTS
 .setdirparams:
 	move.l 	#2,(fib_DirEntryType,A1)	; dir
@@ -560,6 +577,7 @@ jst_resload_LoadKick
 ;ULONG    ULONG                      CPTR    APTR
 
 jst_resload_LoadFile:
+    RELOC_STACK
 	moveq.l	#-1,D1
 	moveq.l	#0,D0
 
@@ -567,14 +585,13 @@ jst_resload_LoadFile:
 	JSRGEN	ReadFile
 	exg	D0,D1	; swap D0 and D1 registers
 	tst.l	D1	; D1=0: okay
-	bne.b	.error
-
-	; no error, size in D0, 0 in D1
-
-	rts
+	beq.b	.exit
 .error
 	moveq.l	#0,D0	; size=0
 	moveq.l	#-1,D1	; error
+.exit
+	; if no error, size in D0, 0 in D1
+    UNRELOC_STACK
 	rts
 
 ; new since v4.0: removes /'s in front of filename
@@ -583,7 +600,7 @@ jst_resload_LoadFile:
 ; I removed it)
 
 jst_resload_SaveFile:
-	STORE_REGS	A0
+    RELOC_STACK
 	move.l	D0,D1	; length
 
 ;;	cmp.b	#'/',(A0)
@@ -599,7 +616,7 @@ jst_resload_SaveFile:
 	move.l	#205,D1
 .ok
 	neg.l	D0
-	RESTORE_REGS	A0
+    UNRELOC_STACK
 	rts
 
 ; < D0: new status
@@ -654,13 +671,16 @@ set_cacr_sup:
 	rte
 	
 jst_resload_ListFiles:
+    RELOC_STACK
 	STORE_REGS	D2-A6
 	bsr	RelocNameWithDir
 	INGAMEOSCALL	WHDReadDir
 	RESTORE_REGS	D2-A6
+    UNRELOC_STACK
 	rts
 
 jst_resload_Decrunch:
+    RELOC_STACK
 	STORE_REGS	D6
 	moveq.l	#0,D6
 	
@@ -705,15 +725,18 @@ jst_resload_Decrunch:
 	move.l	D6,D0		; decrunched length
 	RESTORE_REGS	D6
 	JSRGEN	FlushCachesHard
+    UNRELOC_STACK
 	tst.l	d0
 	rts
 
 	
 jst_resload_LoadFileDecrunch:
+    move.l  a1,-(a7)
 	bsr	jst_resload_LoadFile
+    move.l  (a7)+,a1
 	tst.l	D1
 	bne.b	.error
-	STORE_REGS	D2-A6
+	STORE_REGS	D6
 
 	move.l	D0,D6
 
@@ -725,7 +748,7 @@ jst_resload_LoadFileDecrunch:
 
 	move.l	D6,D0	; file was not packed: restore real length
 .waspacked
-	RESTORE_REGS	D2-A6
+	RESTORE_REGS	D6
 	moveq.l	#0,D1	; no error, anyway
 	rts
 .error:
@@ -740,6 +763,7 @@ jst_resload_FlushCache:
 ; > D0: size (or 0 if empty or not found, setting the error flag if not found)
 ; limitation: if file isn't preloaded that doesn't work (file is always not found)
 jst_resload_GetFileSize:
+    RELOC_STACK
 	STORE_REGS	D1/A4/A5
 
 	SET_VAR_CONTEXT
@@ -757,6 +781,7 @@ jst_resload_GetFileSize:
 	move.l	(4,A5),d0
 .exit
 	RESTORE_REGS	D1/A4/A5
+    UNRELOC_STACK
 	tst.l	d0		; some slaves test the CCR flags without performing a TST.L !!
 	rts
 .notfound
@@ -784,6 +809,7 @@ jst_resload_GetFileSize:
 ; all games.
 
 jst_resload_DiskLoad:
+    RELOC_STACK
 	STORE_REGS	D2-D3
 	SAVE_INTENA_AND_FREEZE
 	
@@ -811,12 +837,14 @@ jst_resload_DiskLoad:
 
 	moveq.l	#0,D1	; errcode: 0 : OK
 	moveq.l	#-1,D0	; returns TRUE
+.exit
+    UNRELOC_STACK
 	rts
 
 .disk_error:
 	moveq.l	#0,D0
 	moveq.l	#1,D1
-	rts
+    bra.b   .exit
 .diskname:
 	dc.b	"disk."
 .disknum:
@@ -1616,6 +1644,13 @@ WHD_OsEmuFail:
 
 	lea	WHDMessAbort(pc),A5
 	bra	RTStoreMessage
+
+	; cdio eats a lot of stack, not suitable for all games
+	; this stack is shared by RN decruncher, same issue (when game files are packed)
+	ds.b	WHD_STACK_SIZE,0
+whd_stack:
+old_stack:
+	dc.l	0	
 
 ;; fake disk io zone, allocated by OSEmu
 

@@ -498,6 +498,14 @@ DISPLAY_FLAG:MACRO
 	bsr	disp_flag
 	ENDM
 
+DISPLAY_VAL:MACRO
+	lea	\1ToolType,A1
+	JSRABS	Display
+	PRINT_MSG	msg_colon
+	GETVAR_L	\2_flag,D0
+	bsr	disp_val
+	ENDM
+
 DisplayOptions:
 	SET_VAR_CONTEXT
 	PRINT_MSG	msg_JOTD_Startup_verbose_mode
@@ -509,6 +517,13 @@ DisplayOptions:
 	JSRABS	Display
 	JSRABS	NewLine
 
+	LEAVAR	custom_str,A1
+	tst.b	(A1)
+	bne	.customok
+	lea	noname_text,A1
+.customok
+	JSRABS	Display
+	JSRABS	NewLine
 
 	lea	LoadDirToolType,A1
 	JSRABS	Display
@@ -605,6 +620,11 @@ DisplayOptions:
 	DISPLAY_FLAG	Debug,debug
 	DISPLAY_FLAG	FreezeRmb,freezermb
 	DISPLAY_FLAG	LeaveVBR,leavevbr
+	DISPLAY_VAL	Custom1,custom1
+	DISPLAY_VAL	Custom2,custom2
+	DISPLAY_VAL	Custom3,custom3
+	DISPLAY_VAL	Custom4,custom4
+	DISPLAY_VAL	Custom5,custom5
 	DISPLAY_FLAG	NoVBRMove,novbrmove
 	DISPLAY_FLAG	Test,test
 	DISPLAY_FLAG	Verbose,verbose
@@ -713,6 +733,10 @@ disp_flag:
 	rts
 .no
 	PRINT_MSG	msg_OFF
+	rts
+disp_val:
+	Mac_printh  d0
+    
 	rts
 
 GetEnvVariables:	; procedure start
@@ -2709,6 +2733,12 @@ TestToolType:	dc.b	"TEST",0
 VerboseToolType:	dc.b	"VERBOSE",0
 NoquitToolType:	dc.b	"NOQUIT",0
 MMUToolType:	dc.b	"MMU",0
+Custom1ToolType:	dc.b	"CUSTOM1",0
+Custom2ToolType:	dc.b	"CUSTOM2",0
+Custom3ToolType:	dc.b	"CUSTOM3",0
+Custom4ToolType:	dc.b	"CUSTOM4",0
+Custom5ToolType:	dc.b	"CUSTOM5",0
+CustomToolType:	dc.b	"CUSTOM",0
 
 
 
@@ -3385,6 +3415,7 @@ CheckOrCreateFileInCache:
 	move.l	A0,D2	; filename (backuped)
 	move.l	#FULLNAME_SIZE,D0	 ; just for the file name (create empty file entry)
 	JSRABS	GetMemFlag
+	or.l	#MEMF_CLEAR,D1    
 	JSRABS	AllocateTheMemory
 	tst.l	d0
 	bne.b	.memok
@@ -4763,6 +4794,7 @@ LoadTheFiles:
 	move.l	#200,D0		; start size: ~20 items
 	move.l	D0,fileidlen_alloc
 	JSRABS	GetMemFlag
+	or.l	#MEMF_CLEAR,D1    
 	VERBOSE_MSG	msg_allocating_memory
 	JSRABS	AllocateTheMemory
 	VERBOSE_MSG	msg_done
@@ -4814,6 +4846,7 @@ LoadTheFiles:
 	rts
 
 .fakefname:	dc.b	"A",0
+    even    ; this temp filename buffer can be used to store fourccs
 temp_filename_buffer:	
 	BLKDECL	b,$100,0
 	even
@@ -5661,13 +5694,13 @@ AbsFun_Priv_Display:
 
 FreeRamFiles:
 	STORE_REGS
-	SET_VAR_CONTEXT
-
+	SET_VAR_CONTEXT    
+    
 	GETVAR_L	fileidbuffer,A5
 	cmp.l	#0,A5
 	beq	.fb
 
-	GETVAR_L	fileidlen,D5
+	TSTVAR_L	fileidlen
 	beq	.fb
 .loop
 	move.l	(A5),D1	; buffer
@@ -5677,9 +5710,10 @@ FreeRamFiles:
 	tst.l	verbose_flag
 	beq	.skipd
 	Mac_print	"--> Freeing "
+    
 	move.l	(4,A5),d4
-	move.l	d4,a1
-	add.l	d1,a1
+	move.l	d4,a1   ; init a1 with size
+	add.l	d1,a1   ; add buffer: name is stored after the data
 	JSRABS	Display
 	Mac_print	" size "
 	Mac_printx	D4
@@ -5775,13 +5809,28 @@ AbsFun_Priv_CloseAllWithError:
 
 	LEAVAR	lastfile_buffer,A1
 	tst.b	(A1)
-	beq.b	.nolastfile
+	beq	.nolastfile
 
 	JSRABS	NewLine
 	PRINT_MSG	msg_Last_file_loaded
 	JSRABS	Display
 	JSRABS	NewLine
 
+    ; check that that last file isn't packed with XPK and signal it
+    ; (PRELOAD checks it but LOWMEM doesn't)
+
+    move.l  a1,a0
+    lea temp_filename_buffer(pc),a1
+    moveq.l #0,d0
+    moveq.l #4,d1
+    bsr AbsFun_Priv_ReadFileHD
+    move.l temp_filename_buffer(pc),d0
+    cmp.l   #'XPKF',d0
+    bne.b   .nolastfile
+    Mac_printf "(which is a XPK-packed file)"
+	PRINT_MSG	msg_xpk_packed_not_supp
+    
+    
 .nolastfile
 	GETVAR_W	last_interrupt,D0
 	beq	.nointerrupt
