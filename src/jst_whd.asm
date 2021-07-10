@@ -679,6 +679,10 @@ jst_resload_ListFiles:
     UNRELOC_STACK
 	rts
 
+; < A0: input buffer
+; < A1: output buffer
+; > D0: length or 0 if not packed
+
 jst_resload_Decrunch:
     RELOC_STACK
 	STORE_REGS	D6
@@ -719,7 +723,7 @@ jst_resload_Decrunch:
 	moveq.l	#0,D6		; len not supported
 	bra.b	.exit
 .notpwm
-	moveq.l	#0,D0		; not crunched: returns 0
+	moveq.l	#0,D6		; not crunched: returns 0
 
 .exit
 	move.l	D6,D0		; decrunched length

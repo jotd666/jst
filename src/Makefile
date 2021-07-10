@@ -50,7 +50,7 @@ $(OBJDIR)/jst_rel.o: jst_rel.asm ReadJoyPad.s reloc_kickstart.asm  send_key_even
 			$(INCDIR)/gp_macros.i $(INCDIR)/osemu.i
 	$(ASM) $(ASMOPTS) jst_rel.asm -o $(OBJDIR)/jst_rel.o
 
-$(OBJDIR)/lvo_dummy.o: lvo_dummy.asm 
+$(OBJDIR)/lvo_dummy.o: lvo_dummy.asm  version
 	$(ASM) $(ASMOPTS) lvo_dummy.asm -o $(OBJDIR)/lvo_dummy.o
 
 

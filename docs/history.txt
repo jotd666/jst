@@ -1,3 +1,8 @@
+v7.2 (10.07.2021)
+
+- ATN!/IMP decrunch is using a newer version: Body Blows Galactic now runs
+- version number now correct (7.1 displayed 7.0)
+
 v7.1 (18.04.2021)
 
 - added stack relocation on most resload calls: Shadow of the Beast runs now
