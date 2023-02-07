@@ -1100,7 +1100,8 @@ PatchObject:	; procedure start
 	SET_VAR_CONTEXT
 
 	; executable?
-
+	move.l	#0,$100
+	
 	GETVAR_L	object_ptr,A0
 	cmp.l	#$3F3,(A0)
 	bne	InvalidObjErr
@@ -1125,9 +1126,11 @@ PatchObject:	; procedure start
 	move.l	4(A0,D0.L),D0	; number of non relocatable variables
 	bra	NonRelocErr
 relocok
+	cmp.l	#$3F0,D1
+	beq.b	debugsym
 	cmp.l	#$3F2,D1
 	bne	InvalidObjErr
-
+debugsym
 	; *** check if valid jotd object
 
 	move.l	HDP_MAGIC(A0),D0

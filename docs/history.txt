@@ -1,3 +1,7 @@
+v7.3 (07.02.2023)
+
+- can load whdload slaves containing debug symbols, like Turrican 2 AGA
+
 v7.2 (10.07.2021)
 
 - ATN!/IMP decrunch is using a newer version: Body Blows Galactic now runs

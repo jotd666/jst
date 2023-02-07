@@ -101,11 +101,12 @@ Check out other documentation files in the "docs" folder:
 - history.txt for changes
 - bugs.txt for what's remaining to fix/code
 - whdlist.txt: not exhaustive list of whdload slaves which run on JST
+  (maintaining a non-working list at https://docs.google.com/spreadsheets/d/13c52fR_DKk3sX69TK6uGXLaL9UC4xLLR85iFenWYN-A/edit?pli=1#gid=0)
 - virtual mouse/keyboard for those cool features that earok implemented when you don't have a mouse
 
 Kickemu support & limitations:
 
-- kickstart emulation (A500 1.2/1.3 ROM and A1200/A4000/A600 3.1 ROM) is supported quite well.
+- kickstart emulation (A500 1.2/1.3 and A1200/A4000/A600 3.1 ROMs) is supported quite well.
 - the resload_ExNext function is not supported (yet): directory read won't work in games
 
 68060 limitations:

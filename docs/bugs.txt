@@ -27,6 +27,7 @@ The compatibility with WHDload is now very good but there are still some games c
 - Worms DC crashes
 - Speedball 2 (68060) unsupported integer instruction. WHDload 68060 emulation is very complete. The one in JST is minimal (MOVEP)
   Maybe it would be possible to patch each game which uses those instructions instead.
+- Seems to have trouble with Kickstart 1.1 or its RTB table (7 cities of gold)
 
 Faery Tale Adventure:
 

@@ -873,7 +873,7 @@ AbsFun_Priv_SendCDTVCommand:
 	JSRLIB	DoIO
 
 .Quit:
-	; close timer.device if open
+	; close cdtv.device if open
 
 	tst.l	D6
 	bne	.Free
