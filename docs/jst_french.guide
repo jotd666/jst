@@ -204,9 +204,9 @@ Voilà une description rapide des options.
   et pas de message de l'auteur.
   Assurez-vous que tout fonctionne bien avant de choisir cette option.
 
-- NOCACHES/NOCACHE (GENERAL): Fige CACR à 0. Tous les caches sont désactivés. 68060 supporté.
+- NOCACHE/NOCACHE (GENERAL): Fige CACR à 0. Tous les caches sont désactivés. 68060 supporté.
 
-- LEAVECACHES (GENERAL): Ne pas toucher les caches. Désactivé par NOCACHES.
+- LEAVECACHES (GENERAL): Ne pas toucher les caches. Désactivé par NOCACHE.
 
 - NOFAST (GENERAL): Toujours allouer l'extension mémoire et les autres buffers en mémoire chip.
   Si vous avez des sprites moisis, cela pourrait aider.
@@ -315,13 +315,13 @@ Ce sont FREEZEKEY et SAVEDIR (ex: setenv FREEZEKEY $5C, setenv SAVEDIR RAD:)
 
 EXEMPLES du CLI pour les loaders JST:
 
-JST MagicPocketsHD NOCACHES DELAY NTSC
+JST MagicPocketsHD NOCACHE DELAY NTSC
 
 JST HookHD NOFAST HDLOAD SAVEDIR=ram: (seuls les utilisateurs enregistrés peuvent utiliser SAVEDIR)
 
 Exemples du CLI pour les exécutables DOS normaux:
 
-JST Dune NOCACHES EXECUTE (le jeu n'aime pas les caches)
+JST Dune NOCACHE EXECUTE (le jeu n'aime pas les caches)
 
 JST ssboot EXECUTE USERDATA=SWOS (L'exécutable ssboot a besoin de SWOS comme argument)
 
@@ -406,7 +406,7 @@ Quelques message d'erreurs peuvent se produire avant ou aprés que le jeu ait dém
   (ça peut aussi planter)
 
 - Exception: <cryptic message> : Une instruction illégale a été rencontrée pendant l'exécution du jeu.
-  Essayez NOCACHES et NOFAST, NOVBRMOVE. Sinon, faites part à l'auteur du loader du problème avec
+  Essayez NOCACHE et NOFAST, NOVBRMOVE. Sinon, faites part à l'auteur du loader du problème avec
   précision (version du loader, version de JST).
 
 - Uninitialized level <X> interrupt: Supprimez le tooltype DEADLY :)
@@ -584,7 +584,7 @@ les caches spécifiques du 68060 (sauf si vous spécifiez LEAVECACHES) et en régla
 en mode OCS (nécessaire pour la plupart des jeux). Bien sûr, les options spécifiques aux loaders
 comme LOWMEM, HDLOAD, NOFAST, SAVEDIR et DELAY ne fonctionneront pas.
 
-Si vous désirez désactiver les caches, ajoutez l'option NOCACHES.
+Si vous désirez désactiver les caches, ajoutez l'option NOCACHE.
 
 Vous pouvez également mettre JST en outil par défaut dans l'icone de l'exécutable
 (mettre le type d'icone à Projet), exactement comme WBKillAGA.
@@ -1115,7 +1115,7 @@ V0.8:
          spécifiques au 68060.
        - Tooltype EXECUTE ajouté pour permettre d'exécuter des programmes DOS normaux,
          (comme KillAGA) avec support du 68060. D'autres tooltypes peuvent être utilisés
-         conjointement avec celui-ci (LEAVEVBR, LEAVECACHES, NOCACHES, NTSC).
+         conjointement avec celui-ci (LEAVEVBR, LEAVECACHES, NOCACHE, NTSC).
          JST peut être à présent utilisé comme un dégrader.
        - Les sprites sont réglés en basse résolution au démarrage (merci à Bert Jahn
          pour la routine.

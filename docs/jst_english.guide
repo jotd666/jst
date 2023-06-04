@@ -136,7 +136,7 @@ Here are all the tooltypes in full:
  @{" NTSC         " Link Ntsc}  @{" USERDATA     " Link Userdata}        
  @{" TRAINER      " Link Trainer}  @{" LOWMEM       " Link Lowmem} 
  @{" QUIET        " Link Quiet}  @{" NOOSSWAP     " Link Noosswap}   
- @{" NOCACHES     " Link Nocaches}  @{" NOQUIT       " Link Noquit}     
+ @{" NOCACHE      " Link Nocache}  @{" NOQUIT       " Link Noquit}     
  @{" LEAVECACHES  " Link Leavecaches}  @{" DELAY        " Link Delay}
  @{" NOFAST       " Link Nofast}  @{" SAVEDIR      " Link Savedir}
  @{" HDLOAD       " Link HDload}  @{" LOADDIR      " Link Loaddir}
@@ -156,7 +156,7 @@ e.g. setenv FREEZEKEY $5C, setenv SAVEDIR RAD:
 
 @{b}EXAMPLES from CLI for normal JST objects:@{ub}
 
-JST MagicPocketsHD NOCACHES DELAY NTSC
+JST MagicPocketsHD NOCACHE DELAY NTSC
 
 @{i}The game doesn't like caches and the disk is a little slow. The screen
 has also been promoted to NTSC.@{ui} 
@@ -168,7 +168,7 @@ to the ram disk. Memory is saved by reading directly from the disk.@{ui}
 
 @{b}EXAMPLES from CLI for normal DOS executables:@{ub}
 
-JST Dune NOCACHES EXECUTE 
+JST Dune NOCACHE EXECUTE 
 
 @{i}The game does not like caches.@{ui}
 
@@ -221,9 +221,9 @@ so only use after you have tested that the loader works correctly.
 
 @ENDNODE
 
-@NODE Nocaches "NOCACHES"
+@NODE Nocache "NOCACHE"
 
-@{b}NOCACHES/NOCACHE@{ub} (GENERAL)
+@{b}NOCACHE@{ub} (GENERAL)
 
 Disables the CPU caches, by setting CACR to 0. Supports the 68060.
 
@@ -233,7 +233,7 @@ Disables the CPU caches, by setting CACR to 0. Supports the 68060.
 
 @{b}LEAVECACHES@{ub} (GENERAL)
 
-Leaves the cache settings alone. Disabled by @{" NOCACHES " Link Nocaches}.
+Leaves the cache settings alone. Disabled by @{" NOCACHE " Link Nocache}.
 
 @ENDNODE
 
@@ -572,7 +572,7 @@ a problem, JST will try to tell you what you should do.@{ub}
   it can display this message (it can crash too!).
 
 · @{b}Exception <cryptic message>:@{ub} some illegal instruction was encountered
-  while the game executed. Try @{" NOCACHES " Link Nocaches} and @{" NOFAST " Link Nofast} to see if it
+  while the game executed. Try @{" NOCACHE " Link Nocache} and @{" NOFAST " Link Nofast} to see if it
   helps. Else report me/patch author the error with accuracy.
 
 · @{b}Uninitialized level <X> interrupt:@{ub} remove the @{" DEADLY " Link Deadly} mode :)
@@ -730,7 +730,7 @@ A: Because it allows to configure the memory you need, suppresses problems
 
 
 Q: The game runs but crashes or gfx is corrupt, or there are slowdowns.@{FG HIGHLIGHT}
-A: Try setting @{" MMU=NONE " Link MMU} and/or @{" NOCACHES " Link Nocaches}.@{FG TEXT}
+A: Try setting @{" MMU=NONE " Link MMU} and/or @{" NOCACHE " Link Nocache}.@{FG TEXT}
 
 
 Q: When I run a game from the CD, or from HD, sometimes JST locks while
@@ -817,7 +817,7 @@ the effect of the above features..
 Of course, loader-specific options like @{" LOWMEM " Link Lowmem}, @{" HDLOAD " Link HDload}, @{" NOFAST " Link Nofast},
 @{" SAVEDIR " Link Savedir} and @{" DELAY " Link Delay} will not work.
 
-If you want to disable the caches, add the @{" NOCACHES " Link Nocaches} argument.
+If you want to disable the caches, add the @{" NOCACHE " Link Nocache} argument.
 
 You can also set JST as a default tool in the executable icon (set icontype
 to Project) just like WBKillAga.
@@ -900,7 +900,7 @@ If you cannot make a game run, try the @{" NOVBRMOVE " Link novbrmove} tooltype.
 It works sometimes.
 
 Due to some unsupported WHDload commands in JST, a game may need
-to have the @{" NOCACHES " Link Nocaches} tooltype set, whereas it works without 
+to have the @{" NOCACHE " Link Nocache} tooltype set, whereas it works without 
 it if you use WHDLoad.
 
 There are some problems when the games use OS swap for gamesaves
@@ -948,6 +948,8 @@ Notes:
 @ENDNODE
 
 @NODE OSEmu "OSEmu - AmigaOS Emulation"
+
+Slaves using this are obsolete and are progressively replaced by kickstart emulation.
 
 OSEmu is an AmigaOS emulation module originally written by Harry and
 maintained/improved by Mr Larmer, Bert Jahn and me.
@@ -1590,7 +1592,7 @@ V0.8:
          68060 specific ones.
        - EXECUTE tooltype added to allow to execute normal DOS programs
          (like KillAGA) with 68060 support. Other tooltypes can be used
-         with it too (LEAVEVBR, LEAVECACHES, NOCACHES, NTSC).
+         with it too (LEAVEVBR, LEAVECACHES, NOCACHE, NTSC).
          Now JST can be used as a degrader
        - Sprites are set to lores using the system at startup (thanx to Bert
          Jahn for the routine).
