@@ -2171,11 +2171,10 @@ call_bcpl:
 	
 	movem.l (sp)+,d7/a5/a6
 
-.nomem:
 	move.l d7,a1
 	move.l #BCPL_STACK,d0
 	JSRLIB	FreeMem
-
+.nomem:
 
 	movem.l (sp)+,d2-d7/a2-a6
 	rts
