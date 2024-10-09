@@ -126,6 +126,7 @@ Contributors:
 - Wepl & asman & others: ReadJoyPad.s routines to safely read joypad
 - Wepl: for the greatest of all: WHDLoad
 - WHDLoad team: for writing so many slaves that work with JST :)
+- Peter Pettersson: for fixing a small bug in a recent version
 - malko from EAB for his extensive testing with kickstart 1.3, and various ways of running JST (WB/CLI, options...)
 - all members of EAB for their kind replies to my sometimes noob posts (after 25 years owning an Amiga!)
   and for sometimes excellent suggestions
