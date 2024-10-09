@@ -1,5 +1,6 @@
 General:
 
+- resload_ReadJoyPort limitations: 1) not cached against multiple quick reads and 2) mouse not supported (yet?)
 - address error (and possibly others like illegal instruction...) are forwarded to the program instead of
   being intercepted by JST exception layer in relocated VBR (ex: Universe: g 1 => universe custom guru screen)
 - add NoMemReverse (not very useful)

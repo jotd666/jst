@@ -1,3 +1,8 @@
+v7.4 (08.10.2024)
+
+- supports whdload v19 ReadJoyPort API (to some extent)
+- fixed potential memory cleanup issue with kick 1.3 (thanks Peter Pettersson)
+
 v7.3 (07.02.2023)
 
 - can load whdload slaves containing debug symbols, like Turrican 2 AGA

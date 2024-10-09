@@ -45,6 +45,7 @@
 	BITDEF	JP,BTN_RED,$16
 	BITDEF	JP,BTN_BLU,$17
 
+
 POTGO_RESET = $FF00  	; was $FFFF but changed, thanks to robinsonb5@eab
 
 ; optional call to differentiate 2-button joystick from CD32 joypad
@@ -91,11 +92,11 @@ _detect_controller_types:
 	rts
 .do_detect
 	moveq	#0,d0
-	bsr		.detect
+	bsr		_detect_a_controller
 	; ignore first read
 	bsr	.wvbl
 	moveq	#0,d0
-	bsr		.detect
+	bsr		_detect_a_controller
 	
 	lea	controller_joypad_0(pc),a0
 	move.b	D0,(A0)
@@ -103,8 +104,8 @@ _detect_controller_types:
 	bsr	.wvbl
 	
 	moveq	#1,d0
-	bsr		.detect
-	lea	controller_joypad_1(pc),a0
+	bsr		_detect_a_controller
+	lea	controller_joypad_0+1(pc),a0
 	move.b	D0,(A0)
 	rts
 
@@ -117,7 +118,8 @@ _detect_controller_types:
 	btst	#5,d0
 	beq.b	.wait
 	rts
-.detect
+	
+_detect_a_controller:
 		movem.l	d1-d6/a0-a1,-(a7)
 	
 		tst.l	d0
@@ -218,7 +220,7 @@ _read_joystick:
 		moveq	#14,d4			; blue button ( port 1 )
 		move.w	#$6f00,d5		; for potgo port 1
 		moveq	#joy1dat,d6		; port 1
-		move.b	controller_joypad_1(pc),d2
+		move.b	controller_joypad_0+1(pc),d2
 
 .direction
 		lea	$DFF000,a0
@@ -325,7 +327,6 @@ joy0		dc.l	0
 joy1		dc.l	0
 controller_joypad_0:
 	dc.b	$FF	; set: joystick 0 is a joypad, else joystick
-controller_joypad_1:
 	dc.b	$FF
 detected_by_os
 		dc.b	0

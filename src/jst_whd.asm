@@ -319,7 +319,28 @@ fake_resload:
  ;Get the string which has been specified via the Custom/S option.
  ;       The buffer is filled as far as possible. If buffer was not large
  ;       enough false will be returned.
+	DEF_WHDOFFSET	resload_VSNPrintF
+		; format string like clib.vsnprintf/exec.RawDoFmt (84)
+		; IN:	d0 = ULONG  length of buffer
+		;	a0 = APTR   buffer to fill
+		;	a1 = CPTR   format string
+		;	a2 = APTR   argument array
+		; OUT:	d0 = ULONG  length of created string with unlimited
+		;		    buffer without final '\0'
+		;	a0 = APTR   pointer to final '\0'
 
+	DEF_WHDOFFSET	resload_Log
+		; write log message (88)
+		; IN:	a0 = CSTR   format string
+		;   (4,a7) = LABEL  argument array
+		; OUT:	-
+
+;******* the following functions require ws_Version >= 19
+
+	DEF_WHDOFFSET	resload_ReadJoyPort
+		; return the state of the selected joy/mouse port (8c)
+		; IN:	d0 = ULONG  port/flags
+		; OUT:	d0 = ULONG  state
 
 fake_resload_end:
 
@@ -475,6 +496,33 @@ jst_resload_Examine
 		
 jst_resload_ExNext
 	WHDLOAD_UNSUPPORTED_CALL	WHD_ExNext,"ExNext"
+jst_resload_Log:
+	WHDLOAD_UNSUPPORTED_CALL	WHD_Log,"Log"
+jst_resload_VSNPrintF:
+	WHDLOAD_UNSUPPORTED_CALL	WHD_VSNPrintF,"VSNPrintF"
+	
+jst_resload_ReadJoyPort:
+	movem.l	d1-d2/a0,-(a7)
+	move.w	d0,d1
+	and.w	#1,d1		; port
+	lea		controller_joypad_0(pc),a0
+	
+	btst	#31,d0		; RJP_Detect
+	beq.b	.1
+	; detect controllers and update status
+	bsr		_detect_a_controller
+	move.b	d0,(a0,d1.w)
+.1
+	move.l	#RJP_TYPE_GAMECTRL,d2
+	tst.b	(a0,d1.w)
+	bne.b	.2
+	move.l	#RJP_TYPE_JOYSTK,d2
+.2
+	move.l	d1,d0
+	bsr		_read_joystick
+	or.l	d2,d0
+	movem.l	(a7)+,d1-d2/a0
+	rts
 	
 jst_resload_GetCustom:
 	STORE_REGS	D1/A1/A4
@@ -963,12 +1011,12 @@ jst_resload_Control:
 .sk12
 	cmp.l	#WHDLTAG_VERSION_GET,D0	;get WHDLoad major version number
 	bne.b	.sk13
-	move.l	#18,D0		; highest possible
+	move.l	#19,D0		; highest possible
 	bra.b	.storetag
 .sk13
 	cmp.l	#WHDLTAG_REVISION_GET,D0	;get WHDLoad major version number
 	bne.b	.sk14
-	moveq.l	#2,D0		; highest possible
+	moveq.l	#0,D0		; highest possible
 	bra	.storetag
 .storetag:
 	move.l	D0,(A0)+
@@ -1649,6 +1697,7 @@ WHD_OsEmuFail:
 	lea	WHDMessAbort(pc),A5
 	bra	RTStoreMessage
 
+	
 	; cdio eats a lot of stack, not suitable for all games
 	; this stack is shared by RN decruncher, same issue (when game files are packed)
 	ds.b	WHD_STACK_SIZE,0
